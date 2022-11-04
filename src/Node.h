@@ -1,0 +1,105 @@
+//
+// Created by 18604 on 11/4/2022.
+//
+
+#ifndef RESEARCH_NODE_H
+#define RESEARCH_NODE_H
+
+
+#include <string>
+#include <set>
+#include <utility>
+
+
+namespace NetworkResilience {
+
+/**
+ * Node types.
+ * */
+  typedef std::string NODE_ID;
+  typedef std::set<NODE_ID> NODE_LINKS;
+
+  class Node {
+  public:
+    NODE_ID id;
+    NODE_LINKS links = NODE_LINKS ();
+    /**
+    * Initializes a node in a Network.
+    * @param nodeID; required to input a node ID.
+    * */
+    explicit Node (NODE_ID a){id = std::move(a);}
+    /**
+     * Links this node with another node.
+     * This is a directed operation(only adds to this node).
+     * @param incomingNode; the node tobe linked with.
+     * */
+    void link (const Node& incomingNode) {links.insert(incomingNode.id);}
+    /**
+     * Links this node with another node.
+     * This is a directed operation(only adds to this node).
+     * @param incomingNodeid; the node id tobe linked with.
+     * */
+    void link (const NODE_ID& incomingNodeid) {links.insert(incomingNodeid);}
+
+    /**
+     * Removes a node.
+     * @param incomingNodeId ; incoming node id.
+     * @return 1 if removal successful, else 0.
+     * */
+    size_t unlink(const NODE_ID& incomingNodeId){ return links.erase(incomingNodeId); }
+
+    /**
+     * Return all links of this node.
+     * @return list of nodes connected.
+     * */
+    NODE_ID[] getLinks(){
+      return links.toArray(new String[0]);
+    }
+    /**
+     * Return all links of this node.
+     *
+     * @return set of nodes connected.
+     */
+    Set<String> getLinksSet(){
+      return links;
+    }
+    /**
+     * Checks if this is linked with the node in question.
+     * @param incomingNode; input node to be checked.
+     * */
+    boolean isLinkedWith(Node incomingNode){
+      return links.contains(incomingNode.id);
+    }
+    /**
+     * Checks if this is linked with the node in question.
+     * @param incomingNodeId; input node id.
+     * */
+    boolean isLinkedWith(String incomingNodeId){
+      return links.contains(incomingNodeId);
+    }
+
+    /**
+     * Get the csv representation of this node's links.
+     * @return a string representation of the node's links
+     * */
+    String getCSVString(){
+      StringBuilder out = new StringBuilder();
+      String[] l = links.toArray(new String[0]);
+      for (String s : l) {
+        out.append(id).append(",")
+            .append(s).append("\n");
+      }
+      return out.toString();
+    }
+
+    /**
+     * Return the degree of the node.
+     * */
+    int getDegree(){
+      return links.size();
+    }
+  };
+
+} // NetworkResilience
+
+#endif //RESEARCH_NODE_H
