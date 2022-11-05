@@ -27,6 +27,9 @@ namespace NetworkResilience {
     int addToConnectedComponents(const NODE_ID& incomingNodeId);
     ConnectedComp iterateConnectedComponent(const ConnectedComp& inputC);
     static void addAllLinks (ConnectedComp& c, const ConnectedComp& links);
+    void randRmNodes(int n, double rmp);
+    static float mersenneTwisterEngine();
+    int rmNode(const NODE_ID& nodeId);
 
   protected:
 

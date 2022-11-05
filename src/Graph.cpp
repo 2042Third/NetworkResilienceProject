@@ -3,6 +3,7 @@
 //
 
 #include "Graph.h"
+#include <random>
 
 namespace NetworkResilience {
   /**
@@ -93,5 +94,48 @@ namespace NetworkResilience {
        c.insert(s);
      }
    }
+
+  /**
+    * Randomly removes n nodes from the graph.
+    * @param n ; number of nodes to be removed.
+    * @param rmp ; removal probability, suggests the probability of a node tobe removed.
+    * */
+  void Graph::randRmNodes(int n, double rmp){
+    int rmd = 0; // # of nodes removed
+    while(rmd<n){
+      if(mersenneTwisterEngine()<rmp){
+        int idx = (int) ((int)(mersenneTwisterEngine()*N)) % ((int)N);
+        if(rmNode(std::to_string(idx))){
+          rmd++;
+        }
+      }
+    }
+  }
+  /**
+   * Use Mersenne Twister to spread the distribution of random
+   * device. Return the random number between 0 and 1.0.
+   * @return random number between 0 and 1.0
+   * */
+  float Graph::mersenneTwisterEngine(){
+    std::random_device rd;   // non-deterministic generator
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(0,1.0);
+    return (float )dis(gen);
+  }
+
+
+  /**
+   * Removes the input node and all links that connects to it.
+   * @param nodeId ; node to be removed.
+   * */
+  int Graph::rmNode(const NODE_ID& nodeId){
+    if (!g.count(nodeId)){
+      return false;
+    }
+    for (const NODE_ID& s : g.find(nodeId)->second.getLinksSet()){
+      g.find(s)->second.unlink(nodeId);
+    }
+    return g.erase(nodeId);
+  }
 
 } // NetworkResilience
