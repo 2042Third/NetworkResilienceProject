@@ -1,5 +1,5 @@
 //
-// Created by 18604 on 11/4/2022.
+// Created by Mike Yang on 11/4/2022.
 //
 
 #ifndef RESEARCH_NODE_H
@@ -9,6 +9,7 @@
 #include <string>
 #include <set>
 #include <utility>
+#include <memory>
 
 
 namespace NetworkResilience {
@@ -52,50 +53,52 @@ namespace NetworkResilience {
      * Return all links of this node.
      * @return list of nodes connected.
      * */
-    NODE_ID[] getLinks(){
-      return links.toArray(new String[0]);
-    }
+//    NODE_ID[] getLinks(){
+//      return links.toArray(new String[0]);
+//    }
     /**
      * Return all links of this node.
      *
      * @return set of nodes connected.
      */
-    Set<String> getLinksSet(){
+    const NODE_LINKS& getLinksSet() const{
       return links;
     }
     /**
      * Checks if this is linked with the node in question.
      * @param incomingNode; input node to be checked.
      * */
-    boolean isLinkedWith(Node incomingNode){
-      return links.contains(incomingNode.id);
+    int isLinkedWith(const Node& incomingNode) const {
+      return links.count(incomingNode.id);
     }
     /**
      * Checks if this is linked with the node in question.
      * @param incomingNodeId; input node id.
      * */
-    boolean isLinkedWith(String incomingNodeId){
-      return links.contains(incomingNodeId);
+    int isLinkedWith(const NODE_ID& incomingNodeId) const{
+      return links.count(incomingNodeId);
     }
 
     /**
+     * WARNING: must call clear csv string when done copying.
      * Get the csv representation of this node's links.
-     * @return a string representation of the node's links
+     * @return a shared pointer of string representation of the node's links
      * */
-    String getCSVString(){
-      StringBuilder out = new StringBuilder();
-      String[] l = links.toArray(new String[0]);
-      for (String s : l) {
-        out.append(id).append(",")
-            .append(s).append("\n");
+    std::shared_ptr<std::string> getCSVString(){
+      std::shared_ptr<std::string> out (new std::string());
+      for (const auto& s : links) {
+        out->append(id);
+        out->append(",");
+        out->append(s);
+        out->append("\n");
       }
-      return out.toString();
+      return out;
     }
 
     /**
      * Return the degree of the node.
      * */
-    int getDegree(){
+    int getDegree() const{
       return links.size();
     }
   };

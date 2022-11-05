@@ -22,11 +22,11 @@ namespace NetworkResilience {
     for (auto const& s : g){
       if(!containsCC(s.first,cc)){
         addToConnectedComponents(s.first);
-        for (int i=0 ;i<cc.size();i++) {
+        for (auto & i : cc) {
           ConnectedComp current = ConnectedComp();
-          current = iterateConnectedComponent(cc[i]);
-          while (cc.get(i).size() != current.size()) {
-            cc.set(i,current);
+          current = iterateConnectedComponent(i);
+          while (i.size() != current.size()) {
+            i = current;
             current = iterateConnectedComponent(current);
           }
         }
@@ -76,14 +76,22 @@ namespace NetworkResilience {
      * @param inputC ; connected component
      * @return a set of nodes that are at most one edge away from one of the input nodes.
      * */
-  ConnectedComp iterateConnectedComponent(ConnectedComp inputC){
+  ConnectedComp Graph::iterateConnectedComponent(const ConnectedComp& inputC){
     ConnectedComp c = ConnectedComp();
-    for (NODE_ID s: inputC){
+    for (const NODE_ID& s: inputC){
       c.insert(s);
-      c.addAll(g.get(s).getLinksSet());
+      addAllLinks(c, g.find(s)->second.getLinksSet());
     }
     return c;
   }
 
+  /**
+   * Add all Links
+   * */
+   void Graph::addAllLinks (ConnectedComp& c, const ConnectedComp& links){
+     for (const auto& s : links){
+       c.insert(s);
+     }
+   }
 
 } // NetworkResilience

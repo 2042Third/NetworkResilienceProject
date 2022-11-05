@@ -25,6 +25,8 @@ namespace NetworkResilience {
     ConnectedComps getConnectedComponents();
     static int containsCC(const NODE_ID& incomingNodeId, const ConnectedComps& conComp);
     int addToConnectedComponents(const NODE_ID& incomingNodeId);
+    ConnectedComp iterateConnectedComponent(const ConnectedComp& inputC);
+    static void addAllLinks (ConnectedComp& c, const ConnectedComp& links);
 
   protected:
 
