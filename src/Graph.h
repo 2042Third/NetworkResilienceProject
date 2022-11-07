@@ -30,9 +30,9 @@ namespace NetworkResilience {
     void randRmNodes(int n, double rmp);
     static float mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
-
+    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
+    DegreeDistro getDD();
   protected:
-
     double p = 0.0;
     double N = 0.0;
     GraphRep g =  GraphRep();

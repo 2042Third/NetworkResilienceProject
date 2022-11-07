@@ -3,6 +3,8 @@
 //
 
 #include "Graph.h"
+#include "RandomGraph.h"
+#include <memory>
 #include <random>
 
 namespace NetworkResilience {
@@ -53,10 +55,11 @@ namespace NetworkResilience {
   }
 
   /**
-     * Adds the input node to a new connected component.
-     * @return 1 if the node doesn't exist in any of the existing component,
-     *          0 if the node exists in one of them.
-     * */
+   * Adds the input node to a new connected component.
+   * @param incomingNodeId: input node id
+   * @return 1 if the node doesn't exist in any of the existing component,
+   *          0 if the node exists in one of them.
+   * */
   int Graph::addToConnectedComponents(const NODE_ID& incomingNodeId){
     // Check if it exists.
     for (const ConnectedComp& c: cc){
@@ -72,11 +75,11 @@ namespace NetworkResilience {
   }
 
   /**
-     * Iterate through all nodes in a set, and return a set of nodes that are connected to it
-     * by one edge.
-     * @param inputC ; connected component
-     * @return a set of nodes that are at most one edge away from one of the input nodes.
-     * */
+   * Iterate through all nodes in a set, and return a set of nodes that are connected to it
+   * by one edge.
+   * @param inputC ; connected component
+   * @return a set of nodes that are at most one edge away from one of the input nodes.
+   * */
   ConnectedComp Graph::iterateConnectedComponent(const ConnectedComp& inputC){
     ConnectedComp c = ConnectedComp();
     for (const NODE_ID& s: inputC){
@@ -105,9 +108,8 @@ namespace NetworkResilience {
     while(rmd<n){
       if(mersenneTwisterEngine()<rmp){
         int idx = (int) ((int)(mersenneTwisterEngine()*N)) % ((int)N);
-        if(rmNode(std::to_string(idx))){
+        if(rmNode(std::to_string(idx)))
           rmd++;
-        }
       }
     }
   }
@@ -137,5 +139,55 @@ namespace NetworkResilience {
     }
     return g.erase(nodeId);
   }
+
+  /**
+    * Run the graph generation x times, and return the accumulated
+    * */
+  DegreeDistro Graph::runAndGetDD(int N, double p, int times, std::string outFile) {
+//    BlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>();
+//      Thread pgs = progressPrint(queue);
+//      pgs.start();
+//      Map<Integer,Integer> dd = getDD(N,p);
+//      queue.add((int)(1/times)*100);
+//      if (times < 1){
+//        return dd;
+//      }
+//      for (int i=0 ;i< times-1;i++){
+//        dd = getDD(N,p,dd);
+//        queue.add((int)(i/times)*100);
+//      }
+//      queue.add(100);
+//      new GraphOutput().writeMap(outFile,dd);
+//      return dd;
+  }
+
+  DegreeDistro Graph::getDD() {
+    dd = *(std::make_shared<DegreeDistro>());
+    for (String s: g.keySet()){
+      Integer degree = g.get(s).getDegree();
+      if(!dd.containsKey(degree)){
+        dd.put(degree,1);
+      }
+      else {
+        dd.replace(degree,dd.get(degree)+1);
+      }
+    }
+    return dd;
+  }
+
+
+  /**
+   *  Run the simulation adn return the degree distribution.
+   * @param N ; number of nodes
+   * @param p ; edge probability
+   * @return degree distribution
+   * */
+  DegreeDistro getDD(int N, double p){
+    RandomGraph g = *(std::make_shared<RandomGraph>(N,p)) ;
+    g.run();
+    return g.getDD();
+  }
+
+
 
 } // NetworkResilience
