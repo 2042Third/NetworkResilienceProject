@@ -187,5 +187,24 @@ namespace NetworkResilience {
     }
   }
 
+  void Graph::printStats(const DegreeDistro& m){
+    double totalNodes = 0;
+    double totalDegree = 0;
+    double avgDegree = 0;
+    for (const auto& i:m){
+      std::printf("%d, ",i.first);
+      totalDegree+=i.first*i.second;
+      totalNodes+=i.second;
+    }
+    std::printf("\n");
+    for (const auto& i:m){
+      std::printf("%d, ",i.first);
+
+    }
+    std::printf("\n");
+    avgDegree = totalDegree/totalNodes;
+    std::printf("Toal nodes: %f\nTotal degree:%f\nAverage degree:%f\n",totalNodes,totalDegree,avgDegree);
+
+  }
 
 } // NetworkResilience

@@ -17,8 +17,8 @@ namespace NetworkResilience {
   class Graph {
   public:
 
-    DegreeDistro dd = DegreeDistro();
-    ConnectedComps cc = ConnectedComps();
+    DegreeDistro dd = DegreeDistro(); // Cached degree distribution
+    ConnectedComps cc = ConnectedComps(); // Cached connected components
 
     Graph(double NIn, double pIn);
     ConnectedComps getConnectedComponents();
@@ -30,10 +30,10 @@ namespace NetworkResilience {
     static float mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
     DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
-
+    static void printStats(const DegreeDistro& m);
   protected:
-    double p = 0.0;
-    double N = 0.0;
+    double p = 0.0; // Degree probability, random network
+    double N = 0.0; // Size
     GraphRep g =  GraphRep();
     void generateNodes();
 
