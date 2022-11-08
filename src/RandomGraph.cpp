@@ -2,18 +2,33 @@
 // Created by 18604 on 11/6/2022.
 //
 
+#include <random>
+#include <memory>
+#include "Graph.h"
 #include "RandomGraph.h"
 
-namespace NetworkResilience {
 
+
+namespace NetworkResilience {
+  /**
+ *  Run the simulation adn return the degree distribution.
+ * @param in_n ; number of nodes
+ * @param in_p ; edge probability
+ * @return degree distribution
+ * */
+  DegreeDistro RandomGraph::getDD(int in_n, double in_p){
+    RandomGraph gph = *(std::make_shared<RandomGraph>(in_n, in_p)) ;
+    gph.run();
+    return gph.getDD();
+  }
   int RandomGraph::run () {
-    this.generateNodes();
+    this->generateNodes();
     randEdges();
     return false;
   }
 
   int RandomGraph::run (int k) {
-    this.generateNodes();
+    this->generateNodes();
     randEdges(k);
     return false;
   }
@@ -44,7 +59,7 @@ namespace NetworkResilience {
    * For all N(N-1)/2 possible edges, link if a random
    * number generated is greater than p.
    * */
-  void RandomGraph::randEdges (int k=0) {
+  void RandomGraph::randEdges (int k) {
     for (int i=0; i<N ;i++){
       for (int f=i+1;f<N;f++){
         if(k){if(randEdge(k)){linkTwo(i, f);}}

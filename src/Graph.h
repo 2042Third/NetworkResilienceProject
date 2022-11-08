@@ -21,7 +21,6 @@ namespace NetworkResilience {
     ConnectedComps cc = ConnectedComps();
 
     Graph(double NIn, double pIn);
-
     ConnectedComps getConnectedComponents();
     static int containsCC(const NODE_ID& incomingNodeId, const ConnectedComps& conComp);
     int addToConnectedComponents(const NODE_ID& incomingNodeId);
@@ -32,14 +31,13 @@ namespace NetworkResilience {
     int rmNode(const NODE_ID& nodeId);
     DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
 
-    DegreeDistro getDD(int in_n, double in_p);
-    DegreeDistro getDD();
   protected:
     double p = 0.0;
     double N = 0.0;
     GraphRep g =  GraphRep();
     void generateNodes();
 
+    DegreeDistro getDD();
 
   };
 

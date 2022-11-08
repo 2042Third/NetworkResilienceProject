@@ -177,24 +177,13 @@ namespace NetworkResilience {
 
 
   /**
-   *  Run the simulation adn return the degree distribution.
-   * @param in_n ; number of nodes
-   * @param in_p ; edge probability
-   * @return degree distribution
-   * */
-  DegreeDistro Graph::getDD(int in_n, double in_p){
-    RandomGraph gph = *(std::make_shared<RandomGraph>(in_n, in_p)) ;
-    gph.run();
-    return gph.getDD();
-  }
-
-  /**
      * Generates unconnected N nodes.
      * */
   void Graph::generateNodes(){
     for (int i=0 ; i<N ; i++){
       NODE_ID nodeid = std::to_string(i);
-      g [nodeid] = *(std::make_shared<Node>(nodeid));
+      Node nd = *(std::make_shared<Node>(nodeid));
+      g.insert({nodeid,nd});
     }
   }
 
