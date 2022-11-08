@@ -19,7 +19,7 @@ namespace NetworkResilience {
  * */
   typedef std::set<NODE_ID> ConnectedComp;
   typedef std::vector<ConnectedComp> ConnectedComps;
-  typedef std::map<int, int> DegreeDistro;
+  typedef std::map<size_t, size_t> DegreeDistro;
   typedef std::map<NODE_ID, NetworkResilience::Node> GraphRep;
 
 

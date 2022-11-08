@@ -10,6 +10,12 @@
 
 
 namespace NetworkResilience {
+  RandomGraph::RandomGraph(double NIn, double pIn): Graph(NIn,pIn){
+//    p = pIn;
+//    N = NIn;
+//    gen = std::mt19937(rd());
+//    dis = std::uniform_real_distribution<>(0,1.0);
+  }
   /**
  *  Run the simulation adn return the degree distribution.
  * @param in_n ; number of nodes
@@ -63,7 +69,12 @@ namespace NetworkResilience {
     for (int i=0; i<N ;i++){
       for (int f=i+1;f<N;f++){
         if(k){if(randEdge(k)){linkTwo(i, f);}}
-        else{if(randEdge()){ linkTwo(i,f);}}
+        else{
+          if(randEdge()){
+            linkTwo(i,f);
+//            std::cout<<"Made link #"<<size<<" between node#"<<i<<" and node#"<<f<<std::endl;
+          }
+        }
       }
     }
   }
@@ -74,6 +85,7 @@ namespace NetworkResilience {
    * @param i node
    * */
   void RandomGraph::linkTwo(int i, int f) {
+    size+=1;
     std::string a = std::to_string(i);
     std::string b = std::to_string(f);
     g.find(a)->second.link(b);
@@ -88,4 +100,12 @@ namespace NetworkResilience {
   int RandomGraph::randEdge(int k) {
     return mersenneTwisterEngine() < k/(N-1);
   }
+
+  RandomGraph::~RandomGraph() = default;
+
+  RandomGraph::RandomGraph(const RandomGraph &graph): Graph(graph) {
+
+  }
+
+
 } // NetowrkResilience

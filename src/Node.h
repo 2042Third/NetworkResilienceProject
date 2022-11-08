@@ -10,6 +10,7 @@
 #include <set>
 #include <utility>
 #include <memory>
+#include <iostream>
 
 
 namespace NetworkResilience {
@@ -28,7 +29,8 @@ namespace NetworkResilience {
     * Initializes a node in a Network.
     * @param nodeID; required to input a node ID.
     * */
-    explicit Node (NODE_ID a){id = std::move(a);}
+    explicit Node (NODE_ID a){id = std::move(a);
+    }
     /**
      * Links this node with another node.
      * This is a directed operation(only adds to this node).
@@ -97,7 +99,7 @@ namespace NetworkResilience {
     /**
      * Return the degree of the node.
      * */
-    int getDegree() const{
+    size_t getDegree() const{
       return links.size();
     }
   };

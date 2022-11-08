@@ -9,6 +9,7 @@
 #include <set>
 #include <vector>
 #include <map>
+#include <random>
 #include "Node.h"
 #include "NetConstructs.h"
 
@@ -21,16 +22,21 @@ namespace NetworkResilience {
     ConnectedComps cc = ConnectedComps(); // Cached connected components
 
     Graph(double NIn, double pIn);
+    Graph(Graph const &graph);
     ConnectedComps getConnectedComponents();
     static int containsCC(const NODE_ID& incomingNodeId, const ConnectedComps& conComp);
     int addToConnectedComponents(const NODE_ID& incomingNodeId);
     ConnectedComp iterateConnectedComponent(const ConnectedComp& inputC);
     static void addAllLinks (ConnectedComp& c, const ConnectedComp& links);
     void randRmNodes(int n, double rmp);
-    static float mersenneTwisterEngine();
+    float mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
     DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
     static void printStats(const DegreeDistro& m);
+    std::random_device rd;   // non-deterministic generator
+    std::mt19937 gen;
+    std::uniform_real_distribution<> dis;
+
   protected:
     double p = 0.0; // Degree probability, random network
     double N = 0.0; // Size

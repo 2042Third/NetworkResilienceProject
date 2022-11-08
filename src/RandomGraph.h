@@ -17,13 +17,18 @@ namespace NetworkResilience {
 
   class RandomGraph : private Graph {
   public:
-    using Graph::Graph;
+    RandomGraph(double NIn, double pIn);
+
+    RandomGraph(RandomGraph const &graph);
+
     int run ();
     int run (int k);
     std::shared_ptr<std::string> getCSV ();
     using Graph::printStats;
     using Graph::getDD;
     DegreeDistro getDD(int in_n, double in_p);
+    size_t size=0;
+    ~RandomGraph();
   protected:
     void randEdges (int k=0);
     int randEdge();

@@ -16,6 +16,8 @@ namespace NetworkResilience {
   Graph::Graph(double NIn, double pIn){
     p = pIn;
     N = NIn;
+    gen = std::mt19937(rd());
+    dis = std::uniform_real_distribution<>(0,1.0);
   }
 
   /**
@@ -119,9 +121,6 @@ namespace NetworkResilience {
    * @return random number between 0 and 1.0
    * */
   float Graph::mersenneTwisterEngine(){
-    std::random_device rd;   // non-deterministic generator
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(0,1.0);
     return (float )dis(gen);
   }
 
@@ -164,7 +163,7 @@ namespace NetworkResilience {
   DegreeDistro Graph::getDD() {
     dd = *(std::make_shared<DegreeDistro>());
     for (const auto& s: g){
-      int degree = s.second.getDegree();
+      size_t degree = s.second.getDegree();
       if(!dd.count(degree)){
         dd.insert({degree, 1});
       }
@@ -188,23 +187,28 @@ namespace NetworkResilience {
   }
 
   void Graph::printStats(const DegreeDistro& m){
-    double totalNodes = 0;
-    double totalDegree = 0;
+    size_t totalNodes = 0;
+    size_t totalDegree = 0;
     double avgDegree = 0;
     for (const auto& i:m){
-      std::printf("%d, ",i.first);
+      std::printf("%zu: %zu\n",i.first,i.second);
       totalDegree+=i.first*i.second;
       totalNodes+=i.second;
     }
     std::printf("\n");
-    for (const auto& i:m){
-      std::printf("%d, ",i.first);
-
-    }
-    std::printf("\n");
     avgDegree = totalDegree/totalNodes;
-    std::printf("Toal nodes: %f\nTotal degree:%f\nAverage degree:%f\n",totalNodes,totalDegree,avgDegree);
+    std::printf("Total nodes connectors: %zu\n"
+                "Total degrees:%zu\n"
+                "Average degree:%f\n"
+                "",totalNodes,totalDegree,avgDegree);
 
+  }
+
+  Graph::Graph(const Graph &graph) {
+    p=graph.p;
+    N=graph.N;
+    gen = std::mt19937(rd());
+    dis = std::uniform_real_distribution<>(0,1.0);
   }
 
 } // NetworkResilience

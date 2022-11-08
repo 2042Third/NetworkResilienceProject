@@ -1,0 +1,16 @@
+# ninja log v5
+29	561	6896481864418097	CMakeFiles/research.dir/src/GraphOperations.cpp.obj	79c7cc4647415f9
+34	563	6896481864418097	CMakeFiles/research.dir/src/Node.cpp.obj	aeba578f98cd6c5a
+0	880	6896481867609155	CMakeFiles/research.dir/main.cpp.obj	3a161c19b99bb4a2
+27	952	6896481868323840	CMakeFiles/research.dir/src/RandomGraph.cpp.obj	3978fb0b35cc9cef
+31	1236	6896481871167036	CMakeFiles/research.dir/src/Graph.cpp.obj	c4ba7e241cd0c21
+1236	1758	6896481876362666	research.exe	141ff7e15bebdaeb
+0	8	0	clean	581b3a36fa72b67
+8	133	6896482222415220	CMakeFiles/research.dir/src/GraphOperations.cpp.obj	79c7cc4647415f9
+14	334	6896482224431944	CMakeFiles/research.dir/src/Node.cpp.obj	aeba578f98cd6c5a
+3	714	6896482228217046	CMakeFiles/research.dir/main.cpp.obj	3a161c19b99bb4a2
+6	795	6896482229025283	CMakeFiles/research.dir/src/RandomGraph.cpp.obj	3978fb0b35cc9cef
+11	1086	6896482231928978	CMakeFiles/research.dir/src/Graph.cpp.obj	c4ba7e241cd0c21
+1086	1366	6896482234712865	research.exe	141ff7e15bebdaeb
+4	665	6896490181327223	CMakeFiles/research.dir/main.cpp.obj	3a161c19b99bb4a2
+666	978	6896490184419270	research.exe	141ff7e15bebdaeb
