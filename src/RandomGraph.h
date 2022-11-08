@@ -21,14 +21,14 @@ namespace NetworkResilience {
     int run ();
     int run (int k);
     std::shared_ptr<std::string> getCSV ();
-
+    using Graph::printStats;
+    using Graph::getDD;
+    DegreeDistro getDD(int in_n, double in_p);
   protected:
     void randEdges (int k=0);
     int randEdge();
     int randEdge(int k);
     void linkTwo(int i, int f);
-    using Graph::getDD;
-    DegreeDistro getDD(int in_n, double in_p);
   };
 
 } // NetowrkResilience
