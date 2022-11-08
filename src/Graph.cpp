@@ -16,7 +16,8 @@ namespace NetworkResilience {
   Graph::Graph(double NIn, double pIn){
     p = pIn;
     N = NIn;
-    gen = std::mt19937(rd());
+//    gen = std::mt19937(rd());
+    gen =  std::minstd_rand(std::random_device{}());
     dis = std::uniform_real_distribution<>(0,1.0);
   }
 
@@ -139,26 +140,6 @@ namespace NetworkResilience {
     return g.erase(nodeId);
   }
 
-//  /**
-//    * Run the graph generation x times, and return the accumulated
-//    * */
-//  DegreeDistro Graph::runAndGetDD(int N, double p, int times, std::string outFile) {
-////    BlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>();
-////      Thread pgs = progressPrint(queue);
-////      pgs.start();
-////      Map<Integer,Integer> dd = getDD(N,p);
-////      queue.add((int)(1/times)*100);
-////      if (times < 1){
-////        return dd;
-////      }
-////      for (int i=0 ;i< times-1;i++){
-////        dd = getDD(N,p,dd);
-////        queue.add((int)(i/times)*100);
-////      }
-////      queue.add(100);
-////      new GraphOutput().writeMap(outFile,dd);
-////      return dd;
-//  }
 
   std::shared_ptr<DegreeDistro> Graph::getDD() {
     dd = std::make_shared<DegreeDistro>();
@@ -209,7 +190,8 @@ namespace NetworkResilience {
   Graph::Graph(const Graph &graph) {
     p=graph.p;
     N=graph.N;
-    gen = std::mt19937(rd());
+//    gen = std::mt19937(rd());
+    gen =  std::minstd_rand(std::random_device{}());
     dis = std::uniform_real_distribution<>(0,1.0);
   }
 

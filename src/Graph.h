@@ -34,7 +34,8 @@ namespace NetworkResilience {
 //    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
     static void printStats(const DegreeDistro& m);
     std::random_device rd;   // non-deterministic generator
-    std::mt19937 gen;
+    std::mt19937 gen_mersenne;
+    std::minstd_rand gen;
     std::uniform_real_distribution<> dis;
 
   protected:
