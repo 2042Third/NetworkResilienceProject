@@ -18,20 +18,20 @@ namespace NetworkResilience {
   class Graph {
   public:
 
-    DegreeDistro dd = DegreeDistro(); // Cached degree distribution
-    ConnectedComps cc = ConnectedComps(); // Cached connected components
+    std::shared_ptr<DegreeDistro> dd ; // Cached degree distribution
+    std::shared_ptr<ConnectedComps> cc ; // Cached connected components
 
     Graph(double NIn, double pIn);
     Graph(Graph const &graph);
-    ConnectedComps getConnectedComponents();
+    std::shared_ptr<ConnectedComps>  getConnectedComponents();
     static int containsCC(const NODE_ID& incomingNodeId, const ConnectedComps& conComp);
     int addToConnectedComponents(const NODE_ID& incomingNodeId);
-    ConnectedComp iterateConnectedComponent(const ConnectedComp& inputC);
-    static void addAllLinks (ConnectedComp& c, const ConnectedComp& links);
+    std::shared_ptr<ConnectedComp> iterateConnectedComponent(const ConnectedComp& inputC);
+    static void addAllLinks (const std::shared_ptr<ConnectedComp>& c, const ConnectedComp& links);
     void randRmNodes(int n, double rmp);
     float mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
-    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
+//    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
     static void printStats(const DegreeDistro& m);
     std::random_device rd;   // non-deterministic generator
     std::mt19937 gen;
@@ -43,7 +43,7 @@ namespace NetworkResilience {
     GraphRep g =  GraphRep();
     void generateNodes();
 
-    DegreeDistro getDD();
+    std::shared_ptr<DegreeDistro> getDD();
 
   };
 

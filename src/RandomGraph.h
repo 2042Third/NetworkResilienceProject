@@ -26,7 +26,7 @@ namespace NetworkResilience {
     std::shared_ptr<std::string> getCSV ();
     using Graph::printStats;
     using Graph::getDD;
-    DegreeDistro getDD(int in_n, double in_p);
+    static std::shared_ptr<DegreeDistro> getDD(int in_n, double in_p);
     size_t size=0;
     ~RandomGraph();
   protected:

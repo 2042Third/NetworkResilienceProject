@@ -23,16 +23,16 @@ namespace NetworkResilience {
   /**
      * Iterate through the net, returns a list of connected components.
      * */
-  ConnectedComps Graph::getConnectedComponents(){
+  std::shared_ptr<ConnectedComps>  Graph::getConnectedComponents(){
     for (auto const& s : g){
-      if(!containsCC(s.first,cc)){
+      if(!containsCC(s.first,*cc)){
         addToConnectedComponents(s.first);
-        for (auto & i : cc) {
-          ConnectedComp current = ConnectedComp();
+        for (auto & i : *cc) {
+          std::shared_ptr<ConnectedComp> current ;
           current = iterateConnectedComponent(i);
-          while (i.size() != current.size()) {
-            i = current;
-            current = iterateConnectedComponent(current);
+          while (i.size() != current->size()) {
+            i = *current;
+            current = iterateConnectedComponent(*current);
           }
         }
       }
@@ -64,7 +64,7 @@ namespace NetworkResilience {
    * */
   int Graph::addToConnectedComponents(const NODE_ID& incomingNodeId){
     // Check if it exists.
-    for (const ConnectedComp& c: cc){
+    for (const ConnectedComp& c: *cc){
       if(c.count(incomingNodeId)){
         return 0;
       }
@@ -72,7 +72,7 @@ namespace NetworkResilience {
     // Add new connected component
     ConnectedComp set = ConnectedComp ();
     set.insert(incomingNodeId);
-    cc.push_back(set);
+    cc->push_back(set);
     return 1;
   }
 
@@ -82,10 +82,10 @@ namespace NetworkResilience {
    * @param inputC ; connected component
    * @return a set of nodes that are at most one edge away from one of the input nodes.
    * */
-  ConnectedComp Graph::iterateConnectedComponent(const ConnectedComp& inputC){
-    ConnectedComp c = ConnectedComp();
+  std::shared_ptr<ConnectedComp> Graph::iterateConnectedComponent(const ConnectedComp& inputC){
+    std::shared_ptr<ConnectedComp> c (new ConnectedComp());
     for (const NODE_ID& s: inputC){
-      c.insert(s);
+      c->insert(s);
       addAllLinks(c, g.find(s)->second.getLinksSet());
     }
     return c;
@@ -94,9 +94,9 @@ namespace NetworkResilience {
   /**
    * Add all Links
    * */
-   void Graph::addAllLinks (ConnectedComp& c, const ConnectedComp& links){
+   void Graph::addAllLinks (const std::shared_ptr<ConnectedComp>& c, const ConnectedComp& links){
      for (const auto& s : links){
-       c.insert(s);
+       c->insert(s);
      }
    }
 
@@ -139,36 +139,36 @@ namespace NetworkResilience {
     return g.erase(nodeId);
   }
 
-  /**
-    * Run the graph generation x times, and return the accumulated
-    * */
-  DegreeDistro Graph::runAndGetDD(int N, double p, int times, std::string outFile) {
-//    BlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>();
-//      Thread pgs = progressPrint(queue);
-//      pgs.start();
-//      Map<Integer,Integer> dd = getDD(N,p);
-//      queue.add((int)(1/times)*100);
-//      if (times < 1){
-//        return dd;
-//      }
-//      for (int i=0 ;i< times-1;i++){
-//        dd = getDD(N,p,dd);
-//        queue.add((int)(i/times)*100);
-//      }
-//      queue.add(100);
-//      new GraphOutput().writeMap(outFile,dd);
-//      return dd;
-  }
+//  /**
+//    * Run the graph generation x times, and return the accumulated
+//    * */
+//  DegreeDistro Graph::runAndGetDD(int N, double p, int times, std::string outFile) {
+////    BlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>();
+////      Thread pgs = progressPrint(queue);
+////      pgs.start();
+////      Map<Integer,Integer> dd = getDD(N,p);
+////      queue.add((int)(1/times)*100);
+////      if (times < 1){
+////        return dd;
+////      }
+////      for (int i=0 ;i< times-1;i++){
+////        dd = getDD(N,p,dd);
+////        queue.add((int)(i/times)*100);
+////      }
+////      queue.add(100);
+////      new GraphOutput().writeMap(outFile,dd);
+////      return dd;
+//  }
 
-  DegreeDistro Graph::getDD() {
-    dd = *(std::make_shared<DegreeDistro>());
+  std::shared_ptr<DegreeDistro> Graph::getDD() {
+    dd = std::make_shared<DegreeDistro>();
     for (const auto& s: g){
       size_t degree = s.second.getDegree();
-      if(!dd.count(degree)){
-        dd.insert({degree, 1});
+      if(!dd->count(degree)){
+        dd->insert({degree, 1});
       }
       else {
-        dd[degree] = degree+1;
+        (*dd)[degree] = degree+1;
       }
     }
     return dd;
@@ -191,7 +191,7 @@ namespace NetworkResilience {
     size_t totalDegree = 0;
     double avgDegree = 0;
     for (const auto& i:m){
-      std::printf("%zu: %zu\n",i.first,i.second);
+//      std::printf("%zu: %zu\n",i.first,i.second);
       totalDegree+=i.first*i.second;
       totalNodes+=i.second;
     }

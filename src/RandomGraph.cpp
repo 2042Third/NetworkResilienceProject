@@ -22,10 +22,10 @@ namespace NetworkResilience {
  * @param in_p ; edge probability
  * @return degree distribution
  * */
-  DegreeDistro RandomGraph::getDD(int in_n, double in_p){
-    RandomGraph gph = *(std::make_shared<RandomGraph>(in_n, in_p)) ;
-    gph.run();
-    return gph.getDD();
+  std::shared_ptr<DegreeDistro> RandomGraph::getDD(int in_n, double in_p){
+    std::shared_ptr<RandomGraph> gph = std::make_shared<RandomGraph>(in_n, in_p) ;
+    gph->run();
+    return gph->getDD();
   }
   int RandomGraph::run () {
     this->generateNodes();
