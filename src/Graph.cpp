@@ -187,6 +187,8 @@ namespace NetworkResilience {
   }
 
   void Graph::printStats(const DegreeDistro& m){
+    std::cout<<"Calculating statistics..."<<std::endl;
+
     size_t totalNodes = 0;
     size_t totalDegree = 0;
     double avgDegree = 0;

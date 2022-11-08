@@ -17,9 +17,15 @@ void first_test_n(){
   g.run();
   net::printStats(*(g.getDD()));
 }
+void test_large(){
+  std::string filename = "t/first_test.csv";
+  int k =10;
+  net g = *(std::make_shared<net>(50000, 0.01));
+  g.run();
+  net::printStats(*(g.getDD()));
+}
 
 int main() {
-  first_test();
-  first_test_n();
+  test_large();
   return 0;
 }

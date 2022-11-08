@@ -28,8 +28,11 @@ namespace NetworkResilience {
     return gph->getDD();
   }
   int RandomGraph::run () {
+    std::cout<<"Begin generation of "<<N << " nodes"<<std::endl;
     this->generateNodes();
+    std::cout<<"Generation done.\n Begin linking with p="<<p<<std::endl;
     randEdges();
+    std::cout<<"Linking done."<<std::endl;
     return false;
   }
 
