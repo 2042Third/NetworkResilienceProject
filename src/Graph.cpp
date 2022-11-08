@@ -163,13 +163,13 @@ namespace NetworkResilience {
 
   DegreeDistro Graph::getDD() {
     dd = *(std::make_shared<DegreeDistro>());
-    for (String s: g.keySet()){
-      Integer degree = g.get(s).getDegree();
-      if(!dd.containsKey(degree)){
-        dd.put(degree,1);
+    for (const auto& s: g){
+      int degree = s.second.getDegree();
+      if(!dd.count(degree)){
+        dd.insert({degree, 1});
       }
       else {
-        dd.replace(degree,dd.get(degree)+1);
+        dd[degree] = degree+1;
       }
     }
     return dd;
@@ -178,16 +178,25 @@ namespace NetworkResilience {
 
   /**
    *  Run the simulation adn return the degree distribution.
-   * @param N ; number of nodes
-   * @param p ; edge probability
+   * @param in_n ; number of nodes
+   * @param in_p ; edge probability
    * @return degree distribution
    * */
-  DegreeDistro getDD(int N, double p){
-    RandomGraph g = *(std::make_shared<RandomGraph>(N,p)) ;
-    g.run();
-    return g.getDD();
+  DegreeDistro Graph::getDD(int in_n, double in_p){
+    RandomGraph gph = *(std::make_shared<RandomGraph>(in_n, in_p)) ;
+    gph.run();
+    return gph.getDD();
   }
 
+  /**
+     * Generates unconnected N nodes.
+     * */
+  void Graph::generateNodes(){
+    for (int i=0 ; i<N ; i++){
+      NODE_ID nodeid = std::to_string(i);
+      g [nodeid] = *(std::make_shared<Node>(nodeid));
+    }
+  }
 
 
 } // NetworkResilience
