@@ -20,7 +20,7 @@ void first_test_n(){
 void test_large(){
   std::string filename = "t/first_test.csv";
   int k =10;
-  net g = *(std::make_shared<net>(50000, 0.01));
+  net g = *(std::make_shared<net>(50000, 0.001));
   g.run();
   net::printStats(*(g.getDD()));
 }

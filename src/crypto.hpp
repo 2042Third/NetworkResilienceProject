@@ -94,7 +94,7 @@ public:
     cy[13] = lower(xcount);
     memcpy(folow, cy, sizeof(uint32_t) * 16);
     // for (unsigned int i = 0; i < 10; i++) tworounds(folow); // 20 rounds
-    for (unsigned int i = 0; i < 1; i++) tworounds(folow); // 2 rounds
+    for (unsigned int i = 0; i < 10; i++) tworounds(folow); // 8 rounds
     set_conc(cy, folow, 16);
     endicha(bk, cy);
   }
@@ -155,8 +155,8 @@ public:
 
   double next () {
     ctr++;
-    if(ctr%16 == 0)
-      one_block(ctr);
+    if(ctr%(32) == 0)
+      one_block(ctr/(16));
     return (double)((double)cy[ctr%16]/(double)UINT32_MAX);
   }
 
