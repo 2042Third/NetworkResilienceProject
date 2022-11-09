@@ -136,10 +136,10 @@ public:
    *
    * */
   void init () {
-    this -> cy[0] = 0xbcd45678;
-    this -> cy[1] = 0x9a123e0f;
-    this -> cy[2] = 0xbc3e0678;
-    this -> cy[3] = 0x9cd4a12f;
+     this -> cy[0] = 0x617178e5;
+     this -> cy[1] = 0xb72c676e;
+     this -> cy[2] = 0x79e2ad32;
+     this -> cy[3] = 0x6b246574;
 
     expan(this -> cy, 14, bk+46, 2); // XCHACHA20 difference
     expan(this -> cy, 12, bk, 4);
@@ -155,7 +155,7 @@ public:
 
   double next () {
     ctr++;
-    if(ctr%(32) == 0)
+    if(ctr%(16) == 0)
       one_block(ctr/(16));
     return (double)((double)cy[ctr%16]/(double)UINT32_MAX);
   }
