@@ -12,6 +12,7 @@
 #include <random>
 #include "Node.h"
 #include "NetConstructs.h"
+#include "crypto.hpp"
 
 namespace NetworkResilience {
 
@@ -29,14 +30,12 @@ namespace NetworkResilience {
     std::shared_ptr<ConnectedComp> iterateConnectedComponent(const ConnectedComp& inputC);
     static void addAllLinks (const std::shared_ptr<ConnectedComp>& c, const ConnectedComp& links);
     void randRmNodes(int n, double rmp);
-    float mersenneTwisterEngine();
+    double mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
 //    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
     static void printStats(const DegreeDistro& m);
     std::random_device rd;   // non-deterministic generator
-    std::mt19937 gen_mersenne;
-    std::minstd_rand gen;
-    std::uniform_real_distribution<> dis;
+    crypto gen;
 
   protected:
     double p = 0.0; // Degree probability, random network

@@ -55,7 +55,7 @@ public:
   uint64_t cast(uint32_t u, uint32_t l){
     uint64_t c = 0;
     uint64_t d = u;
-    d = d<<32; 
+    d = d<<32;
     // d = d>>32; // Shift clean up
     // d = d<<32;
     c += d;
@@ -78,7 +78,7 @@ public:
   // Addition operation
   template<typename NU>
   void set_conc(NU* s1,NU* s2,unsigned int n){
-      for(unsigned int i=0;i<n;i++)s1[i]+=s2[i];
+    for(unsigned int i=0;i<n;i++)s1[i]+=s2[i];
   }
 
   void init_byte_rand_cc20 (uint8_t* a, int n){
@@ -93,7 +93,8 @@ public:
     cy[12] = upper(xcount);
     cy[13] = lower(xcount);
     memcpy(folow, cy, sizeof(uint32_t) * 16);
-    for (unsigned int i = 0; i < 10; i++) tworounds(folow); // 20 rounds
+    // for (unsigned int i = 0; i < 10; i++) tworounds(folow); // 20 rounds
+    for (unsigned int i = 0; i < 1; i++) tworounds(folow); // 2 rounds
     set_conc(cy, folow, 16);
     endicha(bk, cy);
   }
@@ -130,9 +131,9 @@ public:
   /**
    * Assume block, bk[], has 64 bytes of random data.
    * Initializes the cypher block, cy[], using the block.
-   * All operations are based on Yi Yang's implementation of 
+   * All operations are based on Yi Yang's implementation of
    * xchacha20 stream cypher.
-   * 
+   *
    * */
   void init () {
     this -> cy[0] = 0xbcd45678;
@@ -154,8 +155,9 @@ public:
 
   double next () {
     ctr++;
-    one_block(ctr);
-    return (double)((double)cast(cy[ctr%15],cy[ctr%15+1])/(double)UINT64_MAX);
-  } 
+    if(ctr%16 == 0)
+      one_block(ctr);
+    return (double)((double)cy[ctr%16]/(double)UINT32_MAX);
+  }
 
 }; // crypto

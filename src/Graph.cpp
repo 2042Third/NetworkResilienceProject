@@ -16,9 +16,7 @@ namespace NetworkResilience {
   Graph::Graph(double NIn, double pIn){
     p = pIn;
     N = NIn;
-//    gen = std::mt19937(rd());
-    gen =  std::minstd_rand(std::random_device{}());
-    dis = std::uniform_real_distribution<>(0,1.0);
+    gen =  *(std::make_shared<crypto>());
   }
 
   /**
@@ -121,8 +119,8 @@ namespace NetworkResilience {
    * device. Return the random number between 0 and 1.0.
    * @return random number between 0 and 1.0
    * */
-  float Graph::mersenneTwisterEngine(){
-    return (float )dis(gen);
+  double Graph::mersenneTwisterEngine(){
+    return gen.next();
   }
 
 
@@ -190,9 +188,7 @@ namespace NetworkResilience {
   Graph::Graph(const Graph &graph) {
     p=graph.p;
     N=graph.N;
-//    gen = std::mt19937(rd());
-    gen =  std::minstd_rand(std::random_device{}());
-    dis = std::uniform_real_distribution<>(0,1.0);
+    gen =  *(std::make_shared<crypto>());
   }
 
 } // NetworkResilience
