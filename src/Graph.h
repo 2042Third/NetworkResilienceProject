@@ -33,7 +33,7 @@ namespace NetworkResilience {
     double mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
 //    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
-    static void printStats(const DegreeDistro& m);
+void printStats(const DegreeDistro& m) const;
     std::random_device rd;   // non-deterministic generator
     crypto gen;
 
