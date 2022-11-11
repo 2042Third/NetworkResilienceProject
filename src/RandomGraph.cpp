@@ -31,7 +31,8 @@ namespace NetworkResilience {
     std::cout<<"Begin generation of "<<N << " nodes"<<std::endl;
     this->generateNodes();
     std::cout<<"Generation done.\n Begin linking with p="<<p<<std::endl;
-    randEdges();
+//    randEdges();
+    randConnection();
     std::cout<<"Linking done."<<std::endl;
     return false;
   }
@@ -93,10 +94,16 @@ namespace NetworkResilience {
   void RandomGraph::randConnection(){
     size_t i =0;
     while(i<ttl){
-      uint32_t a = gen.nextInt() % (uint32_t)N;
-      uint32_t b = gen.nextInt() % (uint32_t)N;
+      NODE_ID a = std::to_string(gen.nextInt() % (uint32_t)N);
+      NODE_ID b = std::to_string(gen.nextInt() % (uint32_t)N);
+      if(a == b)
+        continue;
+      if(g.find(a)->second.isLinkedWith(g.find(b)->first))
+        continue;
+      linkTwo(a,b);
       i++;
     }
+    std::cout<<"Total random iteration: "<<i<<std::endl;
   }
 
   /**
@@ -104,12 +111,22 @@ namespace NetworkResilience {
    * @param f node
    * @param i node
    * */
-  void RandomGraph::linkTwo(int i, int f) {
+  void RandomGraph::linkTwo(size_t i, size_t f) {
     size+=1;
     std::string a = std::to_string(i);
     std::string b = std::to_string(f);
     g.find(a)->second.link(b);
     g.find(b)->second.link(a);
+  }
+  /**
+   * Links the two nodes
+   * @param f node
+   * @param i node
+   * */
+  void RandomGraph::linkTwo(NODE_ID i, NODE_ID f) {
+    size+=1;
+    g.find(i)->second.link(f);
+    g.find(f)->second.link(i);
   }
 
   /**
