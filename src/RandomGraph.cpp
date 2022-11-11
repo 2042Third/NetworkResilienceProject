@@ -87,15 +87,15 @@ namespace NetworkResilience {
     }
   }
 
+  /**
+   * Randomly connects nodes
+   * */
   void RandomGraph::randConnection(){
-    for (int i=0; i<N ;i++){
-      double r = gen.next();
-      for (int f=i+1;f<avgd;f++){
-
-          if(randEdge()){
-            linkTwo(i,f);
-          }
-      }
+    size_t i =0;
+    while(i<ttl){
+      uint32_t a = gen.nextInt() % (uint32_t)N;
+      uint32_t b = gen.nextInt() % (uint32_t)N;
+      i++;
     }
   }
 

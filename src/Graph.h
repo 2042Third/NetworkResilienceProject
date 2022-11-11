@@ -39,8 +39,9 @@ namespace NetworkResilience {
   protected:
     double p = 0.0; // Degree probability, random network
     double N = 0.0; // Size
-    double avgd = 0.0; // average degree
+    size_t ttl = 0; // average degree
     GraphRep g =  GraphRep();
+    size_t totalDegree = 0;
     void generateNodes();
 
     std::shared_ptr<DegreeDistro> getDD();

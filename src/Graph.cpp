@@ -16,7 +16,7 @@ namespace NetworkResilience {
   Graph::Graph(double NIn, double pIn){
     p = pIn;
     N = NIn;
-    avgd = p*N*(N-1)/2;
+    ttl = std::floor(p * N * (N - 1) / 2);
     gen =  *(std::make_shared<crypto>());
   }
 
@@ -144,6 +144,7 @@ namespace NetworkResilience {
     dd = std::make_shared<DegreeDistro>();
     for (const auto& s: g){
       size_t degree = s.second.getDegree();
+      totalDegree+=degree;
       if(!dd->count(degree)){
         dd->insert({degree, 1});
       }
@@ -169,25 +170,20 @@ namespace NetworkResilience {
   void Graph::printStats(const DegreeDistro& m) const{
     std::cout<<"Calculating statistics..."<<std::endl;
 
-    size_t totalNodes = 0;
-    size_t totalDegree = 0;
-    double avgDegree = 0;
-    for (const auto& i:m){
-      totalDegree+=i.first*i.second;
-      totalNodes+=i.second;
-    }
-    std::printf("\n");
-    avgDegree = totalDegree/totalNodes;
+    size_t totalNodes = g.size();
 
-    auto exp_num_links= (size_t) (p*((N*(N-1))/2));
+    size_t avgDegree = (totalDegree/2)/totalNodes;
+
     std::printf("Total nodes connectors: %zu\n"
                 "Total degrees:%zu\n"
-                "Average degree:%f\n"
+                "Average degree:%zu\n"
                 "\n Expected number of links: %zu\n"
-                ,totalNodes
-                ,totalDegree
-                ,avgDegree
-                ,exp_num_links
+                "Expected average degree: %zu\n"
+                , totalNodes
+                ,totalDegree/2
+                , avgDegree
+                , ttl
+                , ttl / totalNodes
                 );
 
   }
@@ -195,6 +191,8 @@ namespace NetworkResilience {
   Graph::Graph(const Graph &graph) {
     p=graph.p;
     N=graph.N;
+    ttl = std::floor(p * N * (N - 1) / 2);
+
     gen =  *(std::make_shared<crypto>());
   }
 
