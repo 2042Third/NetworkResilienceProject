@@ -28,6 +28,7 @@ namespace NetworkResilience {
     using Graph::getDD;
     static std::shared_ptr<DegreeDistro> getDD(int in_n, double in_p);
     size_t size=0;
+    void randConnection();
     ~RandomGraph();
   protected:
     void randEdges (int k=0);

@@ -159,5 +159,11 @@ public:
       one_block(ctr/(16));
     return (double)((double)cy[ctr%16]/(double)UINT32_MAX);
   }
+  uint32_t nextInt () {
+    ctr++;
+    if(ctr%(16) == 0)
+      one_block(ctr/(16));
+    return cy[ctr%16];
+  }
 
 }; // crypto

@@ -16,6 +16,7 @@ namespace NetworkResilience {
   Graph::Graph(double NIn, double pIn){
     p = pIn;
     N = NIn;
+    avgd = p*N*(N-1)/2;
     gen =  *(std::make_shared<crypto>());
   }
 

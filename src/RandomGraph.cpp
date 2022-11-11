@@ -70,14 +70,31 @@ namespace NetworkResilience {
    * */
   void RandomGraph::randEdges (int k) {
     for (int i=0; i<N ;i++){
-      for (int f=i+1;f<N;f++){
-        if(k){if(randEdge(k)){linkTwo(i, f);}}
+// Change #1
+      for (int f=i+1;f<avgd;f++){ // every node links to average degree number of nodes
+        if(k){
+          if(randEdge(k)){
+            linkTwo(i, f);
+          }
+        }
         else{
           if(randEdge()){
-            linkTwo(i,f);
+            linkTwo(i,);
 //            std::cout<<"Made link #"<<size<<" between node#"<<i<<" and node#"<<f<<std::endl;
           }
         }
+      }
+    }
+  }
+
+  void RandomGraph::randConnection(){
+    for (int i=0; i<N ;i++){
+      double r = gen.next();
+      for (int f=i+1;f<avgd;f++){
+
+          if(randEdge()){
+            linkTwo(i,f);
+          }
       }
     }
   }
