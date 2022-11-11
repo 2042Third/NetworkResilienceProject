@@ -158,6 +158,9 @@ public:
     if(ctr%(16) == 0)
       one_block(ctr/(16));
     return (double)((double)cy[ctr%16]/(double)UINT32_MAX);
+//    if(ctr%(64) == 0)
+//      one_block(ctr/(64));
+//    return (double)((double)bk[ctr%64]/(double)UINT8_MAX);
   }
   uint32_t nextInt () {
     ctr++;

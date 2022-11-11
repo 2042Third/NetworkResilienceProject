@@ -71,7 +71,7 @@ namespace NetworkResilience {
   void RandomGraph::randEdges (int k) {
     for (int i=0; i<N ;i++){
 // Change #1
-      for (int f=i+1;f<avgd;f++){ // every node links to average degree number of nodes
+      for (int f=i+1;f<N;f++){ // every node links to average degree number of nodes
         if(k){
           if(randEdge(k)){
             linkTwo(i, f);
@@ -79,7 +79,7 @@ namespace NetworkResilience {
         }
         else{
           if(randEdge()){
-            linkTwo(i,);
+            linkTwo(i,f);
 //            std::cout<<"Made link #"<<size<<" between node#"<<i<<" and node#"<<f<<std::endl;
           }
         }
