@@ -199,12 +199,10 @@ namespace NetworkResilience {
   }
 
   Graph::~Graph(){
-    if(gen != nullptr)
-      delete gen;
-    if (dd != nullptr)
-      delete dd;
-    for (auto i=0; i<trashCan.size();i++)
-      delete trashCan[i];
+    delete gen;
+    delete dd;
+    for (auto & i : trashCan)
+      delete i;
   }
 
 } // NetworkResilience

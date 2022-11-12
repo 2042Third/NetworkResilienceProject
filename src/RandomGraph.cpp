@@ -140,14 +140,8 @@ namespace NetworkResilience {
   }
 
   RandomGraph::~RandomGraph() {
-    if (gph != nullptr)
       delete gph;
-    if(gen != nullptr)
-      delete gen;
-    if (dd != nullptr)
-      delete dd;
-    for (auto i=0; i<trashCan.size();i++)
-      delete trashCan[i];
+
   }
 
   RandomGraph::RandomGraph(const RandomGraph &graph): Graph(graph) {
