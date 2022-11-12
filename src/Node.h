@@ -85,8 +85,8 @@ namespace NetworkResilience {
      * Get the csv representation of this node's links.
      * @return a shared pointer of string representation of the node's links
      * */
-    std::shared_ptr<std::string> getCSVString() const {
-      std::shared_ptr<std::string> out (new std::string());
+    std::string* getCSVString() const {
+      std::string* out (new std::string());
       for (const auto& s : links) {
         out->append(id);
         out->append(",");

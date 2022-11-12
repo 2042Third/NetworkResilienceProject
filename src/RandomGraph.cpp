@@ -22,11 +22,12 @@ namespace NetworkResilience {
  * @param in_p ; edge probability
  * @return degree distribution
  * */
-  std::shared_ptr<DegreeDistro> RandomGraph::getDD(int in_n, double in_p){
-    std::shared_ptr<RandomGraph> gph = std::make_shared<RandomGraph>(in_n, in_p) ;
+  DegreeDistro* RandomGraph::getDD(int in_n, double in_p){
+    gph = new RandomGraph(in_n, in_p) ;
     gph->run();
     return gph->getDD();
   }
+
   int RandomGraph::run () {
     std::cout<<"Begin generation of "<<N << " nodes"<<std::endl;
     this->generateNodes();
@@ -46,8 +47,8 @@ namespace NetworkResilience {
   /**
    * Converts and outputs the graph as a .csv string.
    * */
-  std::shared_ptr<std::string> RandomGraph::getCSV(){
-    std::shared_ptr<std::string> out (new std::string());
+  std::string* RandomGraph::getCSV(){
+    std::string* out = new std::string();
     for (const auto& s : g) {
       out->append(*(s.second.getCSVString()));
     }
@@ -94,8 +95,8 @@ namespace NetworkResilience {
   void RandomGraph::randConnection(){
     size_t i =0;
     while(i<ttl){
-      NODE_ID a = std::to_string(gen.nextInt() % (uint32_t)N);
-      NODE_ID b = std::to_string(gen.nextInt() % (uint32_t)N);
+      NODE_ID a = std::to_string(gen->nextInt() % (uint32_t)N);
+      NODE_ID b = std::to_string(gen->nextInt() % (uint32_t)N);
       if(a == b)
         continue;
       if(g.find(a)->second.isLinkedWith(g.find(b)->first))
@@ -138,7 +139,16 @@ namespace NetworkResilience {
     return mersenneTwisterEngine() < k/(N-1);
   }
 
-  RandomGraph::~RandomGraph() = default;
+  RandomGraph::~RandomGraph() {
+    if (gph != nullptr)
+      delete gph;
+    if(gen != nullptr)
+      delete gen;
+    if (dd != nullptr)
+      delete dd;
+    for (auto i=0; i<trashCan.size();i++)
+      delete trashCan[i];
+  }
 
   RandomGraph::RandomGraph(const RandomGraph &graph): Graph(graph) {
 

@@ -17,18 +17,19 @@ namespace NetworkResilience {
     p = pIn;
     N = NIn;
     ttl = std::floor(p * N * (N - 1) / 2);
-    gen =  *(std::make_shared<crypto>());
+    gen = new crypto();
   }
 
   /**
      * Iterate through the net, returns a list of connected components.
+     * WARNING: NOT SAFE!!!!!!! FIX MEMORY BEFORE USING. 
      * */
-  std::shared_ptr<ConnectedComps>  Graph::getConnectedComponents(){
+  ConnectedComps*  Graph::getConnectedComponents(){
     for (auto const& s : g){
       if(!containsCC(s.first,*cc)){
         addToConnectedComponents(s.first);
         for (auto & i : *cc) {
-          std::shared_ptr<ConnectedComp> current ;
+          ConnectedComp* current ;
           current = iterateConnectedComponent(i);
           while (i.size() != current->size()) {
             i = *current;
@@ -82,8 +83,8 @@ namespace NetworkResilience {
    * @param inputC ; connected component
    * @return a set of nodes that are at most one edge away from one of the input nodes.
    * */
-  std::shared_ptr<ConnectedComp> Graph::iterateConnectedComponent(const ConnectedComp& inputC){
-    std::shared_ptr<ConnectedComp> c (new ConnectedComp());
+  ConnectedComp* Graph::iterateConnectedComponent(const ConnectedComp& inputC){
+    ConnectedComp* c =new ConnectedComp();
     for (const NODE_ID& s: inputC){
       c->insert(s);
       addAllLinks(c, g.find(s)->second.getLinksSet());
@@ -94,8 +95,8 @@ namespace NetworkResilience {
   /**
    * Add all Links
    * */
-   void Graph::addAllLinks (const std::shared_ptr<ConnectedComp>& c, const ConnectedComp& links){
-     for (const auto& s : links){
+   void Graph::addAllLinks ( ConnectedComp* c, const ConnectedComp& links){
+     for (const std::string& s : links){
        c->insert(s);
      }
    }
@@ -121,7 +122,7 @@ namespace NetworkResilience {
    * @return random number between 0 and 1.0
    * */
   double Graph::mersenneTwisterEngine(){
-    return gen.next();
+    return gen->next();
   }
 
 
@@ -140,8 +141,8 @@ namespace NetworkResilience {
   }
 
 
-  std::shared_ptr<DegreeDistro> Graph::getDD() {
-    dd = std::make_shared<DegreeDistro>();
+  DegreeDistro* Graph::getDD() {
+    dd = new DegreeDistro();
     for (const auto& s: g){
       size_t degree = s.second.getDegree();
       totalDegree+=degree;
@@ -162,7 +163,8 @@ namespace NetworkResilience {
   void Graph::generateNodes(){
     for (int i=0 ; i<N ; i++){
       NODE_ID nodeid = std::to_string(i);
-      Node nd = *(std::make_shared<Node>(nodeid));
+      trashCan.push_back(new Node(nodeid));
+      Node nd = *(trashCan.back());
       g.insert({nodeid,nd});
     }
   }
@@ -193,7 +195,16 @@ namespace NetworkResilience {
     N=graph.N;
     ttl = std::floor(p * N * (N - 1) / 2);
 
-    gen =  *(std::make_shared<crypto>());
+    gen = new crypto();
+  }
+
+  Graph::~Graph(){
+    if(gen != nullptr)
+      delete gen;
+    if (dd != nullptr)
+      delete dd;
+    for (auto i=0; i<trashCan.size();i++)
+      delete trashCan[i];
   }
 
 } // NetworkResilience
