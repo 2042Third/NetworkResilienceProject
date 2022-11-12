@@ -22,7 +22,7 @@ void first_test_n(){
 void test_large(){
   std::string filename = "t/first_test.csv";
   int k =10;
-  net *g = new net(5000, 0.01);
+  net *g = new net(100000, 0.001);
   g->run();
   g->printStats(*(g->getDD()));
   delete g;
