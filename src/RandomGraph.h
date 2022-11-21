@@ -36,7 +36,7 @@ namespace NetworkResilience {
     int randEdge();
     int randEdge(int k);
     void linkTwo(size_t i, size_t f);
-    void linkTwo(NODE_ID i, NODE_ID f);
+    void linkTwo(const NODE_ID& i, const NODE_ID& f);
   };
 
 } // NetowrkResilience

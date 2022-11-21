@@ -16,66 +16,11 @@ namespace NetworkResilience {
   Graph::Graph(double NIn, double pIn){
     p = pIn;
     N = NIn;
+    cc = new ConnectedComps();
     ttl = std::floor(p * N * (N - 1) / 2);
     gen = new crypto();
   }
 
-  /**
-     * Iterate through the net, returns a list of connected components.
-     * WARNING: NOT SAFE!!!!!!! FIX MEMORY BEFORE USING. 
-     * */
-  ConnectedComps*  Graph::getConnectedComponents(){
-    for (auto const& s : g){
-      if(!containsCC(s.first,*cc)){
-        addToConnectedComponents(s.first);
-        for (auto & i : *cc) {
-          ConnectedComp* current ;
-          current = iterateConnectedComponent(i);
-          while (i.size() != current->size()) {
-            i = *current;
-            current = iterateConnectedComponent(*current);
-          }
-        }
-      }
-    }
-    return cc;
-  }
-
-  /**
-   * Checks if the node is in any of the recorded connected components.
-   * @param incomingNodeId: input node id
-   * @param conComp: connected components
-   * @return 1 if the node exists in one of them.
-   *          0 if the node doesn't exist in any of the existing component,
-   * */
-  int Graph::containsCC(const NODE_ID& incomingNodeId, const ConnectedComps& conComp){
-    for (const ConnectedComp& c: conComp){
-      if(c.count(incomingNodeId)){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Adds the input node to a new connected component.
-   * @param incomingNodeId: input node id
-   * @return 1 if the node doesn't exist in any of the existing component,
-   *          0 if the node exists in one of them.
-   * */
-  int Graph::addToConnectedComponents(const NODE_ID& incomingNodeId){
-    // Check if it exists.
-    for (const ConnectedComp& c: *cc){
-      if(c.count(incomingNodeId)){
-        return 0;
-      }
-    }
-    // Add new connected component
-    ConnectedComp set = ConnectedComp ();
-    set.insert(incomingNodeId);
-    cc->push_back(set);
-    return 1;
-  }
 
   /**
    * Iterate through all nodes in a set, and return a set of nodes that are connected to it
@@ -161,9 +106,10 @@ namespace NetworkResilience {
      * Generates unconnected N nodes.
      * */
   void Graph::generateNodes(){
+    const size_t exp_degree = (ttl / N);
     for (int i=0 ; i<N ; i++){
       NODE_ID nodeid = std::to_string(i);
-      trashCan.push_back(new Node(nodeid));
+      trashCan.push_back(new Node(nodeid,exp_degree));
       Node nd = *(trashCan.back());
       g.insert({nodeid,nd});
     }
@@ -180,12 +126,12 @@ namespace NetworkResilience {
                 "Total degrees:%zu\n"
                 "Average degree:%zu\n"
                 "\n Expected number of links: %zu\n"
-                "Expected average degree: %zu\n"
+                "Expected average degree: %f\n"
                 , totalNodes
                 ,totalDegree/2
                 , avgDegree
                 , ttl
-                , ttl / totalNodes
+                , ttl / N
                 );
 
   }
@@ -201,6 +147,9 @@ namespace NetworkResilience {
   Graph::~Graph(){
     delete gen;
     delete dd;
+    for (auto & i : *cc)
+      delete i;
+    delete cc;
     for (auto & i : trashCan)
       delete i;
   }

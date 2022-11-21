@@ -29,6 +29,7 @@ void test_large(){
 }
 
 int main() {
-  test_large();
+//  test_large();
+  first_test_n();
   return 0;
 }

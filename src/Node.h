@@ -11,6 +11,7 @@
 #include <utility>
 #include <memory>
 #include <iostream>
+#include <unordered_set>
 
 
 namespace NetworkResilience {
@@ -19,7 +20,7 @@ namespace NetworkResilience {
  * Node types.
  * */
   typedef std::string NODE_ID;
-  typedef std::set<NODE_ID> NODE_LINKS;
+  typedef std::unordered_set<NODE_ID> NODE_LINKS;
 
   class Node {
   public:
@@ -29,7 +30,17 @@ namespace NetworkResilience {
     * Initializes a node in a Network.
     * @param nodeID; required to input a node ID.
     * */
-    explicit Node (NODE_ID a){id = std::move(a);
+    explicit Node (const NODE_ID& a){
+      id = a;
+    }
+    /**
+    * Initializes a node in a Network, and suggest a capacity
+    * with a expected size of links
+    * @param nodeID; required to input a node ID.
+    * */
+    explicit Node (const NODE_ID& a, const size_t& exp_size){
+      id = a;
+      links.reserve(exp_size);
     }
     /**
      * Links this node with another node.
@@ -86,7 +97,7 @@ namespace NetworkResilience {
      * @return a shared pointer of string representation of the node's links
      * */
     std::string* getCSVString() const {
-      std::string* out (new std::string());
+      auto* out (new std::string());
       for (const auto& s : links) {
         out->append(id);
         out->append(",");

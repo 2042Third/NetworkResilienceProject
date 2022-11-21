@@ -9,6 +9,8 @@
 #include <set>
 #include <vector>
 #include <map>
+#include <unordered_set>
+#include <unordered_map>
 #include "Node.h"
 
 namespace NetworkResilience {
@@ -17,10 +19,10 @@ namespace NetworkResilience {
 /**
  * Graph types.
  * */
-  typedef std::set<NODE_ID> ConnectedComp;
-  typedef std::vector<ConnectedComp> ConnectedComps;
-  typedef std::map<size_t, size_t> DegreeDistro;
-  typedef std::map<NODE_ID, NetworkResilience::Node> GraphRep;
+  typedef std::unordered_set<NODE_ID> ConnectedComp;
+  typedef std::vector<ConnectedComp*> ConnectedComps;
+  typedef std::unordered_map<size_t, size_t> DegreeDistro;
+  typedef std::unordered_map<NODE_ID, NetworkResilience::Node> GraphRep;
 
 
 } // NetworkResilience
