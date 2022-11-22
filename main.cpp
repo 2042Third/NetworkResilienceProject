@@ -14,7 +14,7 @@ void first_test(){
 void first_test_n(){
   std::string filename = "t/first_test.csv";
   int k =10;
-  net *g = new net(5000, 0.1);
+  net *g = new net(5000, 0.001);
   g->run();
   g->printStats(*(g->getDD()));
   delete g;
@@ -29,7 +29,7 @@ void test_large(){
 }
 
 int main() {
-//  test_large();
-  first_test_n();
+  test_large();
+//  first_test_n();
   return 0;
 }

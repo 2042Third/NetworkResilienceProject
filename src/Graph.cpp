@@ -17,6 +17,8 @@ namespace NetworkResilience {
     p = pIn;
     N = NIn;
     cc = new ConnectedComps();
+    cc->push_back(new ConnectedComp());
+    (*cc)[0]->reserve((size_t)N);
     ttl = std::floor(p * N * (N - 1) / 2);
     gen = new crypto();
   }
@@ -125,11 +127,13 @@ namespace NetworkResilience {
     std::printf("Total nodes connectors: %zu\n"
                 "Total degrees:%zu\n"
                 "Average degree:%zu\n"
+                "Connected Component size: %zu\n"
                 "\n Expected number of links: %zu\n"
                 "Expected average degree: %f\n"
                 , totalNodes
                 ,totalDegree/2
                 , avgDegree
+                , (*cc)[0]->size()
                 , ttl
                 , ttl / N
                 );

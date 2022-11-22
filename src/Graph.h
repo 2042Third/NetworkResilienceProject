@@ -24,15 +24,11 @@ namespace NetworkResilience {
 
     Graph(double NIn, double pIn);
     Graph(Graph const &graph);
-//    ConnectedComps*  getConnectedComponents();
-//    static int containsCC(const NODE_ID& incomingNodeId, const ConnectedComps& conComp);
-//    int addToConnectedComponents(const NODE_ID& incomingNodeId);
     ConnectedComp* iterateConnectedComponent(const ConnectedComp& inputC);
     static void addAllLinks ( ConnectedComp* c, const ConnectedComp& links);
     void randRmNodes(int n, double rmp);
     double mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
-//    DegreeDistro runAndGetDD(int N, double p, int times, std::string outFile);
     void printStats(const DegreeDistro& m) const;
     std::random_device rd;   // non-deterministic generator
     crypto *gen = nullptr;

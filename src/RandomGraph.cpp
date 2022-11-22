@@ -101,9 +101,25 @@ namespace NetworkResilience {
         continue;
       if(g.find(a)->second.isLinkedWith(g.find(b)->first))
         continue;
+      // Link
       linkTwo(a,b);
-
+      // Only called in the first time
+      if(!i){
+        (*cc)[0]->insert(a);
+        (*cc)[0]->insert(b);
+        i++;
+        continue;
+      }
       i++;
+      // Fill connected component
+      const size_t fd_a = (*cc)[0]->count(a);
+      const size_t fd_b = (*cc)[0]->count(b);
+      if(fd_a){
+        (*cc)[0]->insert(b);
+      }
+      else if(fd_b){
+        (*cc)[0]->insert(a);
+      }
     }
     std::cout<<"Total random iteration: "<<i<<std::endl;
   }
