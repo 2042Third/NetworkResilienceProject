@@ -26,6 +26,7 @@ namespace NetworkResilience {
     std::string* getCSV ();
     using Graph::printStats;
     using Graph::getDD;
+    using Graph::check_connected;
     DegreeDistro* getDD(int in_n, double in_p);
     size_t size=0;
     void randConnection();

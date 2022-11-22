@@ -17,8 +17,8 @@ namespace NetworkResilience {
     p = pIn;
     N = NIn;
     cc = new ConnectedComps();
-    cc->push_back(new ConnectedComp());
-    (*cc)[0]->reserve((size_t)N);
+//    cc->push_back(new ConnectedComp());
+//    (*cc)[0]->reserve((size_t)N);
     ttl = std::floor(p * N * (N - 1) / 2);
     gen = new crypto();
   }
@@ -118,7 +118,7 @@ namespace NetworkResilience {
   }
 
   void Graph::printStats(const DegreeDistro& m) const{
-    std::cout<<"Calculating statistics..."<<std::endl;
+    std::cout<<"******* Calculating statistics... *******"<<std::endl;
 
     size_t totalNodes = g.size();
 
@@ -127,16 +127,21 @@ namespace NetworkResilience {
     std::printf("Total nodes connectors: %zu\n"
                 "Total degrees:%zu\n"
                 "Average degree:%zu\n"
-                "Connected Component size: %zu\n"
+                "Connected Components: %zu\n"
                 "\n Expected number of links: %zu\n"
                 "Expected average degree: %f\n"
                 , totalNodes
                 ,totalDegree/2
                 , avgDegree
-                , (*cc)[0]->size()
+                , cc->size()
                 , ttl
                 , ttl / N
                 );
+    int count=0;
+    for (const auto& i : (*cc)){
+      count++;
+      std::cout<<count<<"'th cc size: "<<i->size()<<std::endl;
+    }
 
   }
 
@@ -157,5 +162,52 @@ namespace NetworkResilience {
     for (auto & i : trashCan)
       delete i;
   }
+
+  void Graph::check_connected() {
+    itrd.reserve((size_t)N);
+    for (const auto& i : g){
+
+      itrd.clear();
+      iterate_nodes(i.second.id);
+    }
+  }
+
+  void Graph::iterate_nodes(const NODE_ID& n) {
+    if(itrd.count(n))
+      return;
+    itrd.insert(n);
+    int idx = add_connected(n);
+    if(idx+1==0)
+      idx = cc->size()-1;
+
+    for(const auto& i: g.find(n)->second.links){
+      add_connected(idx,i);
+      iterate_nodes(i);
+    }
+  }
+
+  void Graph::add_connected(const size_t &idx,const basic_string<char> &b) {
+    int found = 0;
+    (*cc)[idx]->insert(b);
+  }
+
+  /**
+   * @return index of the cc when added to a connected component,
+   *         -1 otherwise.
+   * */
+  int Graph::add_connected(const basic_string<char> &a) {
+    int index = 0;
+    for( auto& ccs:(*cc)){
+      const size_t fa = ccs->count(a);
+      if(fa){
+        return index;
+      }
+      index ++;
+    }
+    cc->push_back(new ConnectedComp());
+    (*cc)[cc->size()-1]->insert(a);
+    return -1;
+  }
+
 
 } // NetworkResilience
