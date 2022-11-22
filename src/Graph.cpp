@@ -173,7 +173,7 @@ namespace NetworkResilience {
   }
 
   void Graph::iterate_nodes(const NODE_ID& n) {
-    if(itrd.count(n))
+    if(itrd.count(n) || g.find(n)->second.getLinksSet().size() <1)
       return;
     itrd.insert(n);
     int idx = add_connected(n);
@@ -226,7 +226,7 @@ namespace NetworkResilience {
           }
           c++;
         }
-        return fst;
+        return add_connected(a);
       }
       else {
         merge_cc(*((*cc)[scd]), *((*cc)[fst]));
