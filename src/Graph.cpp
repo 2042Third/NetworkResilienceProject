@@ -197,17 +197,61 @@ namespace NetworkResilience {
    * */
   int Graph::add_connected(const basic_string<char> &a) {
     int index = 0;
+    int found = 0;
+    int fst=-1,scd=-1;
     for( auto& ccs:(*cc)){
       const size_t fa = ccs->count(a);
       if(fa){
-        return index;
+        if(fst==-1)
+          fst = index;
+        else
+          scd = index;
+        found++;
       }
       index ++;
+    }
+
+    if(found == 1){
+      return fst;
+    }
+
+    else if (found > 1){
+      if((*cc)[fst]->size()>(*cc)[scd]->size()) {
+        merge_cc(*((*cc)[fst]), *((*cc)[scd]));
+        int c = 0;
+        for(auto i=cc->begin();i!=cc->end();i++){
+          if(c == scd){
+            cc->erase(i);
+            break;
+          }
+          c++;
+        }
+        return fst;
+      }
+      else {
+        merge_cc(*((*cc)[scd]), *((*cc)[fst]));
+        int c = 0;
+        for(auto i=cc->begin();i!=cc->end();i++){
+          if(c == fst){
+            cc->erase(i);
+            break;
+          }
+          c++;
+        }
+        return add_connected(a);
+      }
     }
     cc->push_back(new ConnectedComp());
     (*cc)[cc->size()-1]->insert(a);
     return -1;
   }
+
+  void Graph::merge_cc(ConnectedComp &a, ConnectedComp &b) {
+    for (const auto&i:b)
+      a.insert(i);
+  }
+
+
 
 
 } // NetworkResilience

@@ -11,6 +11,7 @@
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
+#include <list>
 #include "Node.h"
 
 namespace NetworkResilience {

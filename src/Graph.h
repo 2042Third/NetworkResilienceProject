@@ -4,7 +4,7 @@
 
 #ifndef RESEARCH_GRAPH_H
 #define RESEARCH_GRAPH_H
-
+#include <iterator>
 #include <string>
 #include <set>
 #include <vector>
@@ -37,7 +37,7 @@ namespace NetworkResilience {
     std::random_device rd;   // non-deterministic generator
     crypto *gen = nullptr;
     ~Graph();
-
+    static void merge_cc(ConnectedComp&a,ConnectedComp&b);
     void check_connected( );
 
   protected:

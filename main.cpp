@@ -7,6 +7,7 @@ void first_test(){
   std::string filename = "t/first_test.csv";
   int k =10;
   net *g = new net(500, 0.0071);
+//  net *g = new net(100, 0.71);
   g->run();
   g->check_connected();
   g->printStats(*(g->getDD()));
