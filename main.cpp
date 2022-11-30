@@ -20,6 +20,8 @@ void first_test_n(){
   net *g = new net(128000, 0.0000625); // p = 0.0000625
                                   // avg degree = 4
   g->run();
+  uint32_t cc = g->connected_components_count();
+  std::cout<<"Connected Components: "<<cc<<std::endl;
   g->printStats(*(g->getDD()));
   delete g;
 }
@@ -33,8 +35,8 @@ void test_large(){
 }
 
 int main() {
-//   first_test_n();
-//    test_large();
-  first_test();
+  first_test_n();
+//  test_large();
+//  first_test();
   return 0;
 }
