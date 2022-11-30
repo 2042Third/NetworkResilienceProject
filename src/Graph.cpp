@@ -13,7 +13,7 @@ namespace NetworkResilience {
    * @param NIn N; number of nodes.
    * @param pIn p; edge probability.
    * */
-  Graph::Graph(double NIn, double pIn){
+  Graph::Graph(G_size NIn, double pIn){
     p = pIn;
     N = NIn;
     cc = new ConnectedComps();
@@ -31,7 +31,7 @@ namespace NetworkResilience {
    * @return a set of nodes that are at most one edge away from one of the input nodes.
    * */
   ConnectedComp* Graph::iterateConnectedComponent(const ConnectedComp& inputC){
-    ConnectedComp* c =new ConnectedComp();
+    auto* c =new ConnectedComp();
     for (const NODE_ID& s: inputC){
       c->insert(s);
       addAllLinks(c, g.find(s)->second.getLinksSet());
@@ -43,7 +43,7 @@ namespace NetworkResilience {
    * Add all Links
    * */
    void Graph::addAllLinks ( ConnectedComp* c, const ConnectedComp& links){
-     for (const std::string& s : links){
+     for (const auto& s : links){
        c->insert(s);
      }
    }
@@ -58,7 +58,7 @@ namespace NetworkResilience {
     while(rmd<n){
       if(mersenneTwisterEngine()<rmp){
         int idx = (int) ((int)(mersenneTwisterEngine()*N)) % ((int)N);
-        if(rmNode(std::to_string(idx)))
+        if(rmNode(idx))
           rmd++;
       }
     }
@@ -91,7 +91,7 @@ namespace NetworkResilience {
   DegreeDistro* Graph::getDD() {
     dd = new DegreeDistro();
     for (const auto& s: g){
-      size_t degree = s.second.getDegree();
+      G_size degree = s.second.getDegree();
       totalDegree+=degree;
       if(!dd->count(degree)){
         dd->insert({degree, 1});
@@ -108,9 +108,9 @@ namespace NetworkResilience {
      * Generates unconnected N nodes.
      * */
   void Graph::generateNodes(){
-    const size_t exp_degree = (ttl / N);
-    for (int i=0 ; i<N ; i++){
-      NODE_ID nodeid = std::to_string(i);
+    const G_size exp_degree = (ttl / N);
+    for (auto i=0 ; i<N ; i++){
+      NODE_ID nodeid = i;
       trashCan.push_back(new Node(nodeid,exp_degree));
       Node nd = *(trashCan.back());
       g.insert({nodeid,nd});
@@ -120,9 +120,9 @@ namespace NetworkResilience {
   void Graph::printStats(const DegreeDistro& m) const{
     std::cout<<"******* Calculating statistics... *******"<<std::endl;
 
-    size_t totalNodes = g.size();
+    G_size totalNodes = g.size();
 
-    size_t avgDegree = (totalDegree/2)/totalNodes;
+    G_size avgDegree = (totalDegree/2)/totalNodes;
 
     std::printf("Total nodes connectors: %zu\n"
                 "Total degrees:%zu\n"

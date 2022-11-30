@@ -17,12 +17,14 @@
 namespace NetworkResilience {
 
   class Graph {
+
+
   public:
 
     DegreeDistro* dd = nullptr; // Cached degree distribution
     ConnectedComps* cc = nullptr; // Cached connected components
 
-    Graph(double NIn, double pIn);
+    Graph(G_size NIn, double pIn);
     Graph(Graph const &graph);
     ConnectedComp* iterateConnectedComponent(const ConnectedComp& inputC);
     static void addAllLinks ( ConnectedComp* c, const ConnectedComp& links);
@@ -35,14 +37,16 @@ namespace NetworkResilience {
     crypto *gen = nullptr;
     ~Graph();
 
+
+
   protected:
     unordered_set<NODE_ID> itrd;
     double p = 0.0; // Degree probability, random network
-    double N = 0.0; // Size
-    size_t ttl = 0; // average degree
+    G_size N = 0.0; // Size
+    G_size ttl = 0; // average degree
     std::vector<Node *>trashCan; // take out the trash when done!
     GraphRep g =  GraphRep();
-    size_t totalDegree = 0;
+    G_size totalDegree = 0;
     void generateNodes();
 
     DegreeDistro* getDD();

@@ -19,7 +19,8 @@ namespace NetworkResilience {
 /**
  * Node types.
  * */
-  typedef std::string NODE_ID;
+  typedef uint32_t G_size;
+  typedef G_size NODE_ID;
   typedef std::unordered_set<NODE_ID> NODE_LINKS;
 
   class Node {
@@ -96,13 +97,13 @@ namespace NetworkResilience {
      * Get the csv representation of this node's links.
      * @return a shared pointer of string representation of the node's links
      * */
-    std::string* getCSVString() const {
-      auto* out (new std::string());
+    std::string getCSVString() const {
+       std::string out;
       for (const auto& s : links) {
-        out->append(id);
-        out->append(",");
-        out->append(s);
-        out->append("\n");
+        out.append(std::to_string(id));
+        out.append(",");
+        out.append(std::to_string(s));
+        out.append("\n");
       }
       return out;
     }

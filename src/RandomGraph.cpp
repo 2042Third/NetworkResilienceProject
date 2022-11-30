@@ -47,10 +47,10 @@ namespace NetworkResilience {
   /**
    * Converts and outputs the graph as a .csv string.
    * */
-  std::string* RandomGraph::getCSV(){
-    auto* out = new std::string();
+  std::string RandomGraph::getCSV(){
+    std::string out;
     for (const auto& s : g) {
-      out->append(*(s.second.getCSVString()));
+      out.append(s.second.getCSVString());
     }
     return out;
   }
@@ -89,53 +89,8 @@ namespace NetworkResilience {
     }
   }
 
-  /**
-   * Randomly connects nodes
-   * */
-  void RandomGraph::randConnection(){
-    size_t i =0;
-    while(i<ttl){
-      const NODE_ID a = std::to_string(gen->nextInt() % (uint32_t)N);
-      const NODE_ID b = std::to_string(gen->nextInt() % (uint32_t)N);
-      if(a == b) // Don't connect on the diagonal
-        continue;
-      if(g.find(a)->second.isLinkedWith(g.find(b)->first))
-        continue;
-      // Link
-      linkTwo(a,b);
-      // Only called in the first time
-//      if(!i){
-//        (*cc)[0]->insert(a);
-//        (*cc)[0]->insert(b);
-//        i++;
-//        continue;
-//      }
-      i++;
-      // Fill connected component
-//      const size_t fd_a = (*cc)[0]->count(a);
-//      const size_t fd_b = (*cc)[0]->count(b);
-//      if(fd_a){
-//        (*cc)[0]->insert(b);
-//      }
-//      else if(fd_b){
-//        (*cc)[0]->insert(a);
-//      }
-    }
-    std::cout<<"Total random iteration: "<<i<<std::endl;
-  }
 
-  /**
-   * Links the two nodes
-   * @param f node
-   * @param i node
-   * */
-  void RandomGraph::linkTwo(size_t i, size_t f) {
-    size+=1;
-    const std::string a = std::to_string(i);
-    const std::string b = std::to_string(f);
-    g.find(a)->second.link(b);
-    g.find(b)->second.link(a);
-  }
+
   /**
    * Links the two nodes
    * @param f node

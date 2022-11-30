@@ -1,7 +1,7 @@
 #include <iostream>
-#include "src/RandomGraph.h"
+#include "src/Algorithms.h"
 
-using net = NetworkResilience::RandomGraph ;
+using net = NetworkResilience::Algorithms ;
 
 void first_test(){
   std::string filename = "t/first_test.csv";
@@ -9,7 +9,6 @@ void first_test(){
   net *g = new net(5000, 0.00071);
 //  net *g = new net(100, 0.71);
   g->run();
-  g->check_connected();
   g->printStats(*(g->getDD()));
   delete g;
 }
@@ -19,7 +18,6 @@ void first_test_n(){
   net *g = new net(128000, 0.0000625); // p = 0.0000625
                                   // avg degree = 4
   g->run();
-  g->check_connected();
   g->printStats(*(g->getDD()));
   delete g;
 }
@@ -28,7 +26,6 @@ void test_large(){
   int k =10;
   net *g = new net(1000000, 0.00005);
   g->run();
-  g->check_connected();
   g->printStats(*(g->getDD()));
   delete g;
 }
