@@ -127,13 +127,11 @@ namespace NetworkResilience {
     std::printf("Total nodes connectors: %u\n"
                 "Total degrees:%u\n"
                 "Average degree:%u\n"
-                "Connected Components: %lu\n"
                 "\n Expected number of links: %u\n"
                 "Expected average degree: %u\n"
                 , totalNodes
                 ,totalDegree/2
                 , avgDegree
-                , cc->size()
                 , ttl
                 , ttl / N
                 );
