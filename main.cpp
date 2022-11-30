@@ -9,6 +9,8 @@ void first_test(){
   net *g = new net(5000, 0.00071);
 //  net *g = new net(100, 0.71);
   g->run();
+  uint32_t cc = g->connected_components_count();
+  std::cout<<"Connected Components: "<<cc<<std::endl;
   g->printStats(*(g->getDD()));
   delete g;
 }

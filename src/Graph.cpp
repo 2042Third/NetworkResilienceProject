@@ -124,12 +124,12 @@ namespace NetworkResilience {
 
     G_size avgDegree = (totalDegree/2)/totalNodes;
 
-    std::printf("Total nodes connectors: %zu\n"
-                "Total degrees:%zu\n"
-                "Average degree:%zu\n"
-                "Connected Components: %zu\n"
-                "\n Expected number of links: %zu\n"
-                "Expected average degree: %f\n"
+    std::printf("Total nodes connectors: %u\n"
+                "Total degrees:%u\n"
+                "Average degree:%u\n"
+                "Connected Components: %lu\n"
+                "\n Expected number of links: %u\n"
+                "Expected average degree: %u\n"
                 , totalNodes
                 ,totalDegree/2
                 , avgDegree

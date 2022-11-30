@@ -15,7 +15,7 @@
 
 namespace NetworkResilience {
 
-  class RandomGraph : protected Graph {
+  class RandomGraph : public Graph {
   public:
     RandomGraph(double NIn, double pIn);
 

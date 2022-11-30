@@ -70,6 +70,7 @@ namespace NetworkResilience{
         if(g.find(a)->second.isLinkedWith(g.find(b)->first))
           continue;
         // Link
+        union_sets(a,b);
         linkTwo(a,b);
         i++;
       }
@@ -77,8 +78,8 @@ namespace NetworkResilience{
     }
 
     Algorithms(double nIn, double pIn) : RandomGraph(nIn, pIn) {
-      sizes.resize(N);
-      parents.resize(N);
+      sizes.resize(N+1);
+      parents.resize(N+1);
       make_set();
     }
   };
