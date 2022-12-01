@@ -12,11 +12,23 @@ void main_loop(net* g, const std::string& of){
     std::cout<< "Next action "<<action<<" [(w)rite, (c)ontinue, (q)uit]: ";
     std::cin>>input;
     if(input == "w"){
+      std::cout<< "Write to file."<<std::endl;
       g->write_output( of,g->get_connected_component_csv());
     }
     else if (input == "c"){
+      std::cout<< "Continue."<<std::endl;
       g->rerun();
+      uint32_t cc = g->connected_components_count();
+      std::cout<<"Connected Components: "<<cc<<std::endl;
     }
+    else if (input == "q") {
+      std::cout<< "Quiting."<<std::endl;
+    }
+    else {
+      input = "c";
+      continue;
+    }
+    std::cout<<std::endl;
     action++;
   }while(input!="q" || input.empty());
 }
