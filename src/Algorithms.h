@@ -15,6 +15,8 @@ namespace NetworkResilience{
     std::vector<G_size> sizes;
     std::vector<G_size> parents;
     G_size largest, largest_size;
+    int second_layer = 0;
+
     /**
      * Make each node its own parent.
      * */
@@ -84,6 +86,26 @@ namespace NetworkResilience{
       std::cout<<"Total random iteration: "<<i<<std::endl;
     }
 
+    /**
+  * Randomly connects nodes
+  * */
+    void randConnection_second(){
+      size_t i =0;
+      while(i<ttl){
+        const G_size a = gen->nextInt() % N + N+1;
+        const G_size b = gen->nextInt() % N + N+1;
+        if(a == b) // Don't connect on the diagonal
+          continue;
+        if(g.find(a)->second.isLinkedWith(g.find(b)->first))
+          continue;
+        // Link
+        union_sets(a,b);
+        linkTwo(a,b);
+        i++;
+      }
+      std::cout<<"Total random iteration: "<<i<<std::endl;
+    }
+
     std::string get_connected_component_csv(){
       std::stringstream out ;
       out<< "Parent, Size \n";
@@ -91,6 +113,16 @@ namespace NetworkResilience{
         out<< i << ", "<< sizes[i]<<"\n";
       }
       return out.str();
+    }
+
+    void add_second_layer (){
+      second_layer = 1;
+      // Resize for the second layer
+      sizes.resize(N*2+2);
+      parents.resize(N*2+2);
+      make_set();
+      largest = -1;
+      largest_size=1;
     }
 
     Algorithms(double nIn, double pIn) : RandomGraph(nIn, pIn) {

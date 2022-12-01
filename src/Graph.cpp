@@ -20,6 +20,7 @@ namespace NetworkResilience {
 //    cc->push_back(new ConnectedComp());
 //    (*cc)[0]->reserve((size_t)N);
     ttl = std::floor(p * N * (N - 1) / 2);
+    g.reserve(N*2+2);
     gen = new crypto();
   }
 
@@ -111,6 +112,19 @@ namespace NetworkResilience {
     const G_size exp_degree = (ttl / N);
     for (auto i=0 ; i<N ; i++){
       NODE_ID nodeid = i;
+      trashCan.push_back(new Node(nodeid,exp_degree));
+      Node nd = *(trashCan.back());
+      g.insert({nodeid,nd});
+    }
+  }
+
+  /**
+     * Generates unconnected N nodes for the second layer.
+     * */
+  void Graph::generateNodes_second(){
+    const G_size exp_degree = (ttl / N);
+    for (auto i=0 ; i<N ; i++){
+      NODE_ID nodeid = i+N+1;
       trashCan.push_back(new Node(nodeid,exp_degree));
       Node nd = *(trashCan.back());
       g.insert({nodeid,nd});
