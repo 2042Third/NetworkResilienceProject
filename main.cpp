@@ -10,10 +10,11 @@ void first_test(){
   int k =10;
   net *g = new net(5000, 0.00071);
 //  net *g = new net(100, 0.71);
+  g->add_second_layer();
   g->run();
+  g->run_second_layer();
   uint32_t cc = g->connected_components_count();
   std::cout<<"Connected Components: "<<cc<<std::endl;
-  g->printStats(*(g->getDD()));
   delete g;
 }
 void first_test_n(){
@@ -23,6 +24,7 @@ void first_test_n(){
   double p = 0.0000625;
   net *g = new net(128000, 0.0000625); // p = 0.0000625, avg degree = 4
   std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
+  g->add_second_layer();
   g->run();
   g->run_second_layer();
   uint32_t cc = g->connected_components_count();
@@ -43,8 +45,8 @@ void test_large(){
 }
 
 int main() {
-  first_test_n();
+//  first_test_n();
 //  test_large();
-//  first_test();
+  first_test();
   return 0;
 }

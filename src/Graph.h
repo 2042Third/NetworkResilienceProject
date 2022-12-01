@@ -54,7 +54,7 @@ namespace NetworkResilience {
     GraphRep g =  GraphRep();
     G_size totalDegree = 0;
     void generateNodes();
-    void generateNodes_second();
+    virtual void generateNodes_second();
 
     DegreeDistro* getDD();
 

@@ -17,7 +17,7 @@ namespace NetworkResilience {
 
   class RandomGraph : public Graph {
   public:
-    RandomGraph(double NIn, double pIn);
+    RandomGraph(G_size NIn, double pIn);
 
     RandomGraph(RandomGraph const &graph);
 

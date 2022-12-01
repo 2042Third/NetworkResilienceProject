@@ -92,18 +92,37 @@ namespace NetworkResilience{
     void randConnection_second()override{
       size_t i =0;
       while(i<ttl){
-        const G_size a = gen->nextInt() % N + N+1;
-        const G_size b = gen->nextInt() % N + N+1;
+        const G_size a = gen->nextInt() % N + N;
+        const G_size b = gen->nextInt() % N + N;
         if(a == b) // Don't connect on the diagonal
           continue;
         if(g.find(a)->second.isLinkedWith(g.find(b)->first))
           continue;
+        std::cout<<"make: "<<a<<", "<<b<<std::endl;
+        std::cout<<"size: "<<g.find(a)->second.link_size()<<", "<<g.find(b)->second.link_size()<<std::endl;
+        std::cout<<"size: "<<g.find(a-N)->second.link_size()<<", "<<g.find(b)->second.link_size()<<std::endl;
+
         // Link
         union_sets(a,b);
         linkTwo(a,b);
         i++;
       }
       std::cout<<"Total random iteration: "<<i<<std::endl;
+    }
+
+    /**
+   * Generates unconnected N nodes for the second layer.
+   * */
+    void generateNodes_second() override{
+      const G_size exp_degree = (ttl / N);
+      for (auto i=0 ; i<N ; i++){
+        NODE_ID nodeid = i+N;
+        trashCan.push_back(new Node(nodeid,exp_degree));
+        Node nd = *(trashCan.back());
+        g.insert({nodeid,nd});
+        union_sets(nodeid,nodeid-N);
+        linkTwo(nodeid,nodeid-N);
+      }
     }
 
     std::string get_connected_component_csv(){
@@ -125,7 +144,7 @@ namespace NetworkResilience{
       largest_size=1;
     }
 
-    Algorithms(double nIn, double pIn) : RandomGraph(nIn, pIn) {
+    Algorithms(G_size nIn, double pIn) : RandomGraph(nIn, pIn) {
       sizes.resize(N+1);
       parents.resize(N+1);
       make_set();

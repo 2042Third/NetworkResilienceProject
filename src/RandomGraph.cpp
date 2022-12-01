@@ -10,7 +10,7 @@
 
 
 namespace NetworkResilience {
-  RandomGraph::RandomGraph(double NIn, double pIn): Graph(NIn,pIn){
+  RandomGraph::RandomGraph(G_size NIn, double pIn): Graph(NIn,pIn){
 //    p = pIn;
 //    N = NIn;
 //    gen = std::mt19937(rd());
@@ -41,7 +41,7 @@ namespace NetworkResilience {
   int RandomGraph::run_second_layer () {
     std::cout<<"Begin second layer generation of "<<N << " nodes"<<std::endl;
     this->generateNodes_second();
-    std::cout<<"Generation done.\n Begin linking with p="<<p<<std::endl;
+    std::cout<<"Second layer Generation done.\n Begin linking with p="<<p<<std::endl;
 //    randEdges();
     randConnection_second();
     std::cout<<"Linking done."<<std::endl;
@@ -108,6 +108,7 @@ namespace NetworkResilience {
    * */
   void RandomGraph::linkTwo(const NODE_ID& i, const NODE_ID& f) {
     size+=1;
+    std::cout<<i<<", "<<f<<std::endl;
     g.find(i)->second.link(f);
     g.find(f)->second.link(i);
   }

@@ -122,13 +122,7 @@ namespace NetworkResilience {
      * Generates unconnected N nodes for the second layer.
      * */
   void Graph::generateNodes_second(){
-    const G_size exp_degree = (ttl / N);
-    for (auto i=0 ; i<N ; i++){
-      NODE_ID nodeid = i+N+1;
-      trashCan.push_back(new Node(nodeid,exp_degree));
-      Node nd = *(trashCan.back());
-      g.insert({nodeid,nd});
-    }
+
   }
 
   void Graph::printStats(const DegreeDistro& m) const{

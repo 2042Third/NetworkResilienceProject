@@ -27,6 +27,11 @@ namespace NetworkResilience {
   public:
     NODE_ID id;
     NODE_LINKS links = NODE_LINKS ();
+
+    G_size link_size(){
+      return links.size();
+    }
+
     /**
     * Initializes a node in a Network.
     * @param nodeID; required to input a node ID.
@@ -41,7 +46,7 @@ namespace NetworkResilience {
     * */
     explicit Node (const NODE_ID& a, const size_t& exp_size){
       id = a;
-      links.reserve(exp_size);
+      links.reserve(exp_size*3);
     }
     /**
      * Links this node with another node.
