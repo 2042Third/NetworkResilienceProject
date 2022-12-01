@@ -89,7 +89,7 @@ namespace NetworkResilience{
     /**
   * Randomly connects nodes
   * */
-    void randConnection_second(){
+    void randConnection_second()override{
       size_t i =0;
       while(i<ttl){
         const G_size a = gen->nextInt() % N + N+1;

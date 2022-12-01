@@ -28,10 +28,12 @@ namespace NetworkResilience {
     DegreeDistro* getDD(int in_n, double in_p);
     size_t size=0;
     virtual void randConnection();
+    virtual void randConnection_second();
     RandomGraph* gph = nullptr;
     ~RandomGraph();
 
     int run ();
+    int run_second_layer();
 
   protected:
     void randEdges (int k=0);
