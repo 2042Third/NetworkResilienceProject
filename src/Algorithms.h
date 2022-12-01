@@ -13,7 +13,7 @@ namespace NetworkResilience{
   public:
     std::vector<G_size> sizes;
     std::vector<G_size> parents;
-
+    G_size largest;
     /**
      * Make each node its own parent.
      * */
@@ -80,6 +80,11 @@ namespace NetworkResilience{
     Algorithms(double nIn, double pIn) : RandomGraph(nIn, pIn) {
       sizes.resize(N+1);
       parents.resize(N+1);
+      make_set();
+      largest = 1;
+    }
+
+    void reset (){
       make_set();
     }
   };
