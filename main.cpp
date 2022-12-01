@@ -17,6 +17,7 @@ void main_loop(net* g, const std::string& of){
     }
     else if (input == "c"){
       std::cout<< "Continue."<<std::endl;
+      g->random_rm();
       g->rerun();
       uint32_t cc = g->connected_components_count();
       std::cout<<"Connected Components: "<<cc<<std::endl;
@@ -55,7 +56,7 @@ void first_test_n(){
   uint32_t cc = g->connected_components_count();
   std::cout<<"Connected Components: "<<cc<<std::endl;
 //  g->printStats(*(g->getDD()));
-//  g->write_output( of,g->get_connected_component_csv());
+  g->write_output( of,g->get_connected_component_csv());
   main_loop(g,of);
 
   delete g;

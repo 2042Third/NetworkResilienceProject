@@ -123,6 +123,12 @@ namespace NetworkResilience {
       delete gph;
   }
 
+  int RandomGraph::random_rm(){
+    G_size n = gen->nextInt() % N;
+    g.erase(n);
+    return 1;
+  }
+
   RandomGraph::RandomGraph(const RandomGraph &graph): Graph(graph) {
 
   }

@@ -40,15 +40,15 @@ namespace NetworkResilience {
     ~Graph();
     std::ofstream file;
     void write_output(const std::string& of,const std::string& a ){
-      file.open(of,	 ios::out);
+      file.open(of,	 ios::out|ios::in);
       NetworkResilience::output::write_to((ofstream &) file, a);
       file.close();
     }
 
-  protected:
-    unordered_set<NODE_ID> itrd;
     double p = 0.0; // Degree probability, random network
     G_size N = 0.0; // Size
+  protected:
+    unordered_set<NODE_ID> itrd;
     G_size ttl = 0; // average degree
     std::vector<Node *>trashCan; // take out the trash when done!
     GraphRep g =  GraphRep();

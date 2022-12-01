@@ -69,7 +69,10 @@ namespace NetworkResilience{
      * */
     G_size connected_components_count(){
       std::unordered_set<G_size> tmp;
-      for (auto i=0 ; i<N ;i++) tmp.insert(find_set(i));
+      for ( auto&o:g) {
+        static auto i= o.first ;
+        tmp.insert(find_set(i));
+      }
       std::cout<< "Largest Connected Component     : "<< largest<<std::endl;
       std::cout<< "Largest Connected Component size: "<< largest_size<<std::endl;
       return tmp.size();
@@ -164,6 +167,8 @@ namespace NetworkResilience{
         parents[x] = x;
         x++;
       }
+      largest = -1;
+      largest_size=1;
     }
 
     void rerun() {
