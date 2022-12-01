@@ -26,6 +26,7 @@ namespace NetworkResilience {
     DegreeDistro* dd = nullptr; // Cached degree distribution
     ConnectedComps* cc = nullptr; // Cached connected components
 
+    int second_layer = 0;
     Graph(G_size NIn, double pIn);
     Graph(Graph const &graph);
     ConnectedComp* iterateConnectedComponent(const ConnectedComp& inputC);
@@ -34,7 +35,6 @@ namespace NetworkResilience {
     double mersenneTwisterEngine();
     int rmNode(const NODE_ID& nodeId);
     void printStats(const DegreeDistro& m) const;
-
     std::random_device rd;   // non-deterministic generator
     crypto *gen = nullptr;
     ~Graph();

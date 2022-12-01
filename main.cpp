@@ -17,7 +17,8 @@ void main_loop(net* g, const std::string& of){
     }
     else if (input == "c"){
       std::cout<< "Continue."<<std::endl;
-      g->random_rm();
+
+      while (!g->random_rm()){}
       g->rerun();
       uint32_t cc = g->connected_components_count();
       std::cout<<"Connected Components: "<<cc<<std::endl;
@@ -26,6 +27,7 @@ void main_loop(net* g, const std::string& of){
       std::cout<< "Quiting."<<std::endl;
     }
     else {
+      std::cout<< "No input."<<std::endl;
       input = "c";
       continue;
     }
@@ -47,7 +49,7 @@ void first_test(){
 void first_test_n(){
 
   uint32_t N = 128000;
-  double p = 0.0000625;
+  double p = 0.00006;
   net *g = new net(128000, 0.0000625); // p = 0.0000625, avg degree = 4
   std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
   g->add_second_layer();

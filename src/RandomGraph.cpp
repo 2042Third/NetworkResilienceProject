@@ -125,10 +125,23 @@ namespace NetworkResilience {
 
   int RandomGraph::random_rm(){
     G_size n = gen->nextInt() % N;
+    if (!g.count(n)){
+      return 0;
+    }
     g.erase(n);
+    if (second_layer) {
+      g.erase(n + N);
+      Node& b = g.find(n+N)->second;
+      unlink_all( b );
+    }
     return 1;
   }
-
+  void RandomGraph::unlink_all(Node & n){
+    for (auto& i:n.links){
+      auto a = g.find(i);
+      a->second.unlink(n.id);
+    }
+  }
   RandomGraph::RandomGraph(const RandomGraph &graph): Graph(graph) {
 
   }

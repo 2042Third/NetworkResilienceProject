@@ -15,7 +15,6 @@ namespace NetworkResilience{
     std::vector<G_size> sizes;
     std::vector<G_size> parents;
     G_size largest, largest_size;
-    int second_layer = 0;
 
     /**
      * Make each node its own parent.
