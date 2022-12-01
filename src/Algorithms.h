@@ -26,6 +26,15 @@ namespace NetworkResilience{
         sizes[i] = 1;
       }
     }
+    /**
+     * Make each node its own parent.
+     * */
+    void make_set_second() {
+      for (auto i=0; i<= N*2+1;i++){
+        parents[i] = i;
+        sizes[i] = 1;
+      }
+    }
 
     /**
      *  Find the parent of the input node.
@@ -98,10 +107,6 @@ namespace NetworkResilience{
           continue;
         if(g.find(a)->second.isLinkedWith(g.find(b)->first))
           continue;
-        std::cout<<"make: "<<a<<", "<<b<<std::endl;
-        std::cout<<"size: "<<g.find(a)->second.link_size()<<", "<<g.find(b)->second.link_size()<<std::endl;
-        std::cout<<"size: "<<g.find(a-N)->second.link_size()<<", "<<g.find(b)->second.link_size()<<std::endl;
-
         // Link
         union_sets(a,b);
         linkTwo(a,b);
@@ -139,7 +144,7 @@ namespace NetworkResilience{
       // Resize for the second layer
       sizes.resize(N*2+2);
       parents.resize(N*2+2);
-      make_set();
+      make_set_second();
       largest = -1;
       largest_size=1;
     }

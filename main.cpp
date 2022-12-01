@@ -45,8 +45,8 @@ void test_large(){
 }
 
 int main() {
-//  first_test_n();
+  first_test_n();
 //  test_large();
-  first_test();
+//  first_test();
   return 0;
 }
