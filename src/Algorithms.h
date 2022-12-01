@@ -5,6 +5,7 @@
 #ifndef RESEARCH_ALGORITHMS_H
 #define RESEARCH_ALGORITHMS_H
 #include <vector>
+#include <sstream>
 #include "RandomGraph.h"
 
 namespace NetworkResilience{
@@ -13,7 +14,7 @@ namespace NetworkResilience{
   public:
     std::vector<G_size> sizes;
     std::vector<G_size> parents;
-    G_size largest;
+    G_size largest, largest_size;
     /**
      * Make each node its own parent.
      * */
@@ -44,7 +45,11 @@ namespace NetworkResilience{
       if(n1!=n2){
         if (sizes[n1]<sizes[n2]) std::swap(n1,n2);
         parents[n2] = n1;
-        sizes[n1] += n2;
+        sizes[n1] += sizes[n2];
+        if(sizes[n1]>largest_size){
+          largest = n1;
+          largest_size = sizes[n1];
+        }
       }
     }
 
@@ -54,6 +59,8 @@ namespace NetworkResilience{
     G_size connected_components_count(){
       std::unordered_set<G_size> tmp;
       for (auto i=0 ; i<N ;i++) tmp.insert(find_set(i));
+      std::cout<< "Largest Connected Component     : "<< largest<<std::endl;
+      std::cout<< "Largest Connected Component size: "<< largest_size<<std::endl;
       return tmp.size();
     }
 
@@ -77,18 +84,28 @@ namespace NetworkResilience{
       std::cout<<"Total random iteration: "<<i<<std::endl;
     }
 
+    std::string get_connected_component_csv(){
+      std::stringstream out ;
+      out<< "Parent, Size";
+      for ( auto i  =0;i<sizes.size();i++) {
+        out<< i << ", "<< sizes[i];
+      }
+      return out.str();
+    }
+
     Algorithms(double nIn, double pIn) : RandomGraph(nIn, pIn) {
       sizes.resize(N+1);
       parents.resize(N+1);
       make_set();
-      largest = 1;
+      largest = -1;
+      largest_size=1;
     }
 
     void reset (){
       make_set();
     }
   };
-}
+} // NetworkResilience
 
 
 #endif //RESEARCH_ALGORITHMS_H

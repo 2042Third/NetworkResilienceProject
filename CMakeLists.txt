@@ -17,4 +17,4 @@ add_executable(research
     src/LinkRep.cpp
     src/LinkRep.h
     src/Algorithms.h
-    )
+    src/output.h)

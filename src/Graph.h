@@ -10,9 +10,11 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <fstream>
 #include "Node.h"
 #include "NetConstructs.h"
 #include "crypto.hpp"
+#include "output.h"
 
 namespace NetworkResilience {
 
@@ -36,8 +38,11 @@ namespace NetworkResilience {
     std::random_device rd;   // non-deterministic generator
     crypto *gen = nullptr;
     ~Graph();
-
-
+    std::ofstream file;
+    void o_file(const std::string& of){file.open(of,	ios::in | ios::out);}
+    void write_output(const std::string& a ){
+      NetworkResilience::output::write_to(file,a);
+    }
 
   protected:
     unordered_set<NODE_ID> itrd;

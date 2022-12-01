@@ -149,6 +149,7 @@ namespace NetworkResilience {
     ttl = std::floor(p * N * (N - 1) / 2);
 
     gen = new crypto();
+
   }
 
   Graph::~Graph(){
@@ -159,6 +160,8 @@ namespace NetworkResilience {
     delete cc;
     for (auto & i : trashCan)
       delete i;
+    if(file.is_open())
+      file.close();
   }
 
 
