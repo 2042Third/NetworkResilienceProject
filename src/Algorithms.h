@@ -86,9 +86,9 @@ namespace NetworkResilience{
 
     std::string get_connected_component_csv(){
       std::stringstream out ;
-      out<< "Parent, Size";
+      out<< "Parent, Size \n";
       for ( auto i  =0;i<sizes.size();i++) {
-        out<< i << ", "<< sizes[i];
+        out<< i << ", "<< sizes[i]<<"\n";
       }
       return out.str();
     }

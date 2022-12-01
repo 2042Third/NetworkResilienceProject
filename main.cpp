@@ -22,13 +22,13 @@ void first_test_n(){
   uint32_t N = 128000;
   double p = 0.0000625;
   net *g = new net(128000, 0.0000625); // p = 0.0000625, avg degree = 4
-  std::string of = "../dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".txt";
-  g->o_file(of);
+  std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
+//  std::string of = "out_"+ to_string(N)+"_"+ to_string(p)+".csv";
   g->run();
   uint32_t cc = g->connected_components_count();
   std::cout<<"Connected Components: "<<cc<<std::endl;
   g->printStats(*(g->getDD()));
-  g->write_output( g->get_connected_component_csv());
+  g->write_output( of,g->get_connected_component_csv());
   delete g;
 }
 void test_large(){

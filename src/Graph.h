@@ -39,9 +39,10 @@ namespace NetworkResilience {
     crypto *gen = nullptr;
     ~Graph();
     std::ofstream file;
-    void o_file(const std::string& of){file.open(of,	ios::in | ios::out);}
-    void write_output(const std::string& a ){
-      NetworkResilience::output::write_to(file,a);
+    void write_output(const std::string& of,const std::string& a ){
+      file.open(of,	 ios::out);
+      NetworkResilience::output::write_to((ofstream &) file, a);
+      file.close();
     }
 
   protected:
