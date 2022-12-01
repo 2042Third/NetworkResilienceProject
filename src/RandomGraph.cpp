@@ -128,11 +128,13 @@ namespace NetworkResilience {
     if (!g.count(n)){
       return 0;
     }
+    Node& a = g.find(n)->second;
+    unlink_all( a );
     g.erase(n);
     if (second_layer) {
-      g.erase(n + N);
       Node& b = g.find(n+N)->second;
       unlink_all( b );
+      g.erase(n + N);
     }
     return 1;
   }

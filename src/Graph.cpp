@@ -135,7 +135,7 @@ namespace NetworkResilience {
     std::printf("Total nodes connectors: %u\n"
                 "Total degrees:%u\n"
                 "Average degree:%u\n"
-                "\n Expected number of links: %u\n"
+                "\nExpected number of links: %u\n"
                 "Expected average degree: %u\n"
                 , totalNodes
                 ,totalDegree/2
