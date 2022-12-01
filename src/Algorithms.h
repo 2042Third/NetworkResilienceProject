@@ -158,8 +158,28 @@ namespace NetworkResilience{
     }
 
     void reset (){
-      make_set();
+      G_size x = 0;
+      for (auto& i:sizes){
+        sizes[x] = 1;
+        parents[x] = x;
+        x++;
+      }
     }
+
+    void rerun() {
+      reset();
+      static G_size a,b;
+      for (auto & i:g){
+        a = i.second.id;
+        for (auto & f: i.second.links){
+          if(g.count(f)) {
+            b = f;
+            union_sets(a,b);
+          }
+        }
+      }
+    }
+
   };
 } // NetworkResilience
 
