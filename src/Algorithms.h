@@ -195,9 +195,10 @@ namespace NetworkResilience{
       if (largest<0)
         connected_components_count();
       for (auto i=0;i<parents.size();i++){
-        if (parents[i] != largest) {
+        if (i<=N && parents[i] != largest) {
           if (g.count(i)) {
             Node &a = g.find(i)->second;
+            std::cout<<a.id<<std::endl;
             unlink_all(a);
             g.erase(i);
           }
