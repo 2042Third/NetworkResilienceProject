@@ -39,7 +39,7 @@ namespace NetworkResilience{
      *  Find the parent of the input node.
      * */
     G_size find_set(G_size n){
-       while (parents[n] != n){
+       while (g.count(n) && parents[n] != n){
          parents[n] = parents[parents[n]];
          n = parents[n];
        }
@@ -52,8 +52,10 @@ namespace NetworkResilience{
     void union_sets(G_size n1, G_size n2){
       n1 = find_set(n1);
       n2 = find_set(n2);
-      if(n1!=n2){
-        if (sizes[n1]<sizes[n2]) std::swap(n1,n2);
+      if (n1 != n2) {
+        if (sizes[n1] < sizes[n2]) {
+          std::swap(n1, n2);
+        }
         parents[n2] = n1;
         sizes[n1] += sizes[n2];
         if(sizes[n1]>largest_size){
@@ -69,10 +71,11 @@ namespace NetworkResilience{
     G_size connected_components_count(){
       std::unordered_set<G_size> tmp;
       for ( auto&o:g) {
-        static auto i= o.first ;
+        auto i= o.second.id ;
         tmp.insert(find_set(i));
       }
       std::cout<< "Largest Connected Component     : "<< largest<<std::endl;
+      std::cout<< "Largest Connected Components    : "<< tmp.size()<<std::endl;
       std::cout<< "Largest Connected Component size: "<< largest_size<<std::endl;
       return tmp.size();
     }
@@ -162,7 +165,8 @@ namespace NetworkResilience{
     void reset (){
       G_size x = 0;
       for (auto& i:sizes){
-        sizes[x] = 1;
+        if(x<=N)sizes[x] = 1;
+        else sizes[x] = 0;
         parents[x] = x;
         x++;
       }
@@ -175,15 +179,58 @@ namespace NetworkResilience{
       static G_size a,b;
       for (auto & i:g){
         a = i.second.id;
+        if(a > N){continue;}
         for (auto & f: i.second.links){
-          if(g.count(f)) {
+          if(g.count(f) ) {
             b = f;
+            if (b > N) { continue; }
             union_sets(a,b);
           }
         }
       }
     }
 
+
+    int remove_all_disconnected(){
+      if (largest<0)
+        connected_components_count();
+      for (auto i=0;i<parents.size();i++){
+        if (parents[i] != largest) {
+          if (g.count(i)) {
+            Node &a = g.find(i)->second;
+            unlink_all(a);
+            g.erase(i);
+          }
+        }
+      }
+      return 1;
+    }
+
+    void unlink_all(Node & n){
+      if(n.links.begin() == n.links.end()){
+        return;
+      }
+      for (auto& i:n.links){
+        auto a = g.find(i);
+        a->second.unlink(n.id);
+      }
+    }
+
+    int random_rm(){
+      G_size n = gen->nextInt() % N;
+      if (!g.count(n)){
+        return 0;
+      }
+      Node& a = g.find(n)->second;
+      unlink_all( a );
+      g.erase(n);
+      if (second_layer) {
+        Node& b = g.find(n+N)->second;
+        unlink_all( b );
+        g.erase(n + N);
+      }
+      return 1;
+    }
   };
 } // NetworkResilience
 

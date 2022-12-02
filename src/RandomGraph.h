@@ -34,8 +34,6 @@ namespace NetworkResilience {
 
     int run ();
     int run_second_layer();
-    int random_rm();
-    void unlink_all(Node & n);
 
   protected:
     void randEdges (int k=0);

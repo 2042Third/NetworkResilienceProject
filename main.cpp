@@ -21,7 +21,7 @@ void main_loop(net* g, const std::string& of){
       while (!g->random_rm()){}
       g->rerun();
       uint32_t cc = g->connected_components_count();
-      std::cout<<"Connected Components: "<<cc<<std::endl;
+      g->remove_all_disconnected();
     }
     else if (input == "q") {
       std::cout<< "Quiting."<<std::endl;
