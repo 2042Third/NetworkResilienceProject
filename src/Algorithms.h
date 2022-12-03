@@ -14,6 +14,7 @@ namespace NetworkResilience{
   public:
     std::vector<G_size> sizes;
     std::vector<G_size> parents;
+    std::vector<Node*> unlinker;
     G_size largest, largest_size;
 
     /**
@@ -39,19 +40,30 @@ namespace NetworkResilience{
      *  Find the parent of the input node.
      * */
     G_size find_set(G_size n){
-       while (g.count(n) && parents[n] != n){
-         parents[n] = parents[parents[n]];
-         n = parents[n];
-       }
+      while (g.count(n) && parents[n] != n){
+        parents[n] = parents[parents[n]];
+        n = parents[n];
+      }
+      return n;
+    }
+    /**
+     *  Find the parent of the input node.
+     *  Not referencing the second layer of the graph.
+     * */
+    G_size find_set_second(G_size n){
+      while (g.count(n) && parents[n] != n && parents[n]<=N){
+        parents[n] = parents[parents[n]];
+        n = parents[n];
+      }
       return n;
     }
 
     /**
      * Merge two connected components together.
      * */
-    void union_sets(G_size n1, G_size n2){
-      n1 = find_set(n1);
-      n2 = find_set(n2);
+    void union_sets(G_size n1, G_size n2, int ref_2nd=0){
+      n1 = ref_2nd? find_set_second(n1):find_set(n1);
+      n2 = ref_2nd? find_set_second(n2):find_set(n2);
       if (n1 != n2) {
         if (sizes[n1] < sizes[n2]) {
           std::swap(n1, n2);
@@ -71,6 +83,8 @@ namespace NetworkResilience{
     G_size connected_components_count(){
       std::unordered_set<G_size> tmp;
       for ( auto&o:g) {
+        if(second_layer && o.second.id>=N)
+          continue;
         auto i= o.second.id ;
         tmp.insert(find_set(i));
       }
@@ -113,7 +127,7 @@ namespace NetworkResilience{
         if(g.find(a)->second.isLinkedWith(g.find(b)->first))
           continue;
         // Link
-        union_sets(a,b);
+        union_sets(a,b,1);
         linkTwo(a,b);
         i++;
       }
@@ -179,12 +193,12 @@ namespace NetworkResilience{
       static G_size a,b;
       for (auto & i:g){
         a = i.second.id;
-        if(a > N){continue;}
+        if(a >= N){continue;}
         for (auto & f: i.second.links){
           if(g.count(f) ) {
             b = f;
-            if (b > N) { continue; }
-            union_sets(a,b);
+            if (b >= N) { continue; }
+            union_sets(a,b,second_layer);
           }
         }
       }
@@ -198,7 +212,7 @@ namespace NetworkResilience{
         if (i<=N && parents[i] != largest) {
           if (g.count(i)) {
             Node &a = g.find(i)->second;
-            std::cout<<a.id<<std::endl;
+            std::cout<<"<<<Disconnected removed>>> "<<a.id<<std::endl;
             unlink_all(a);
             g.erase(i);
           }
@@ -208,12 +222,13 @@ namespace NetworkResilience{
     }
 
     void unlink_all(Node & n){
-      if(n.links.begin() == n.links.end()){
-        return;
-      }
-      for (auto& i:n.links){
-        auto a = g.find(i);
-        a->second.unlink(n.id);
+      if(n.links.begin() == n.links.end())return;
+      if(unlinker.capacity()<=n.links.size())unlinker.resize(n.links.size()+1);
+      unlinker.clear();
+      for (auto& i:n.links){auto a = g.find(i);unlinker.push_back( &a->second );}
+      for (auto &i:unlinker) {
+        i->unlink(n.id);
+//        std::cout<<"Removed(unlink_all) removed "<<n.id<<" from "<<i->id<<std::endl;
       }
     }
 
@@ -225,10 +240,12 @@ namespace NetworkResilience{
       Node& a = g.find(n)->second;
       unlink_all( a );
       g.erase(n);
+//      std::cout<<"Removed(first layer) "<<n<<std::endl;
       if (second_layer) {
         Node& b = g.find(n+N)->second;
         unlink_all( b );
         g.erase(n + N);
+//        std::cout<<"Removed(second layer) "<<n + N<<std::endl;
       }
       return 1;
     }

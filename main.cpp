@@ -50,7 +50,7 @@ void first_test_n(){
 
   uint32_t N = 128000;
   double p = 0.00006;
-  net *g = new net(128000, 0.0000625); // p = 0.0000625, avg degree = 4
+  net *g = new net(128000, 0.0000455); // p = 0.0000625, avg degree = 4
   std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
   g->add_second_layer();
   g->run();
