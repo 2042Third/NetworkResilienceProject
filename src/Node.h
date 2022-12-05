@@ -27,6 +27,7 @@ namespace NetworkResilience {
   public:
     NODE_ID id;
     NODE_LINKS links = NODE_LINKS ();
+    G_size link_count =0;
 
     G_size link_size(){
       return links.size();
@@ -53,20 +54,23 @@ namespace NetworkResilience {
      * This is a directed operation(only adds to this node).
      * @param incomingNode; the node tobe linked with.
      * */
-    void link (const Node& incomingNode) {links.insert(incomingNode.id);}
+    void link (const Node& incomingNode) {link_count++;links.insert(incomingNode.id);}
     /**
      * Links this node with another node.
      * This is a directed operation(only adds to this node).
      * @param incomingNodeid; the node id tobe linked with.
      * */
-    void link (const NODE_ID& incomingNodeid) {links.insert(incomingNodeid);}
+    void link (const NODE_ID& incomingNodeid) {link_count++;links.insert(incomingNodeid);}
 
     /**
      * Removes a node.
      * @param incomingNodeId ; incoming node id.
      * @return 1 if removal successful, else 0.
      * */
-    size_t unlink(const NODE_ID& incomingNodeId){ return links.erase(incomingNodeId); }
+    size_t unlink(const NODE_ID& incomingNodeId){
+      link_count--;
+      return links.erase(incomingNodeId);
+    }
 
     /**
      * Return all links of this node.

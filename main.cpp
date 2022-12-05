@@ -23,6 +23,16 @@ void main_loop(net* g, const std::string& of){
       uint32_t cc = g->connected_components_count();
       g->remove_all_disconnected();
     }
+    else if (input == "r"){
+      std::cout<< "Remove nodes fraction: "<<std::endl;
+      std::string rm_frac = "1.0";
+      std::cin >> rm_frac;
+      double _frac = stod(rm_frac);
+      g->remove_fraction(_frac);
+      g->rerun();
+      g->remove_all_disconnected();
+
+    }
     else if (input == "q") {
       std::cout<< "Quiting."<<std::endl;
     }
@@ -38,12 +48,18 @@ void main_loop(net* g, const std::string& of){
 
 void first_test(){
   std::string filename = "t/first_test.csv";
+  uint32_t N = 5000;
+  double p = 0.00071;
   net *g = new net(5000, 0.00071);
+  std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
   g->add_second_layer();
   g->run();
   g->run_second_layer();
   uint32_t cc = g->connected_components_count();
   std::cout<<"Connected Components: "<<cc<<std::endl;
+//  g->printStats(*(g->getDD()));
+  g->write_output( of,g->get_connected_component_csv());
+  main_loop(g,of);
   delete g;
 }
 void first_test_n(){
@@ -74,8 +90,8 @@ void test_large(){
 }
 
 int main() {
-  first_test_n();
+//  first_test_n();
 //  test_large();
-//  first_test();
+  first_test();
   return 0;
 }

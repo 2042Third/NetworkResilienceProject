@@ -46,7 +46,7 @@ namespace NetworkResilience {
     }
 
     double p = 0.0; // Degree probability, random network
-    G_size N = 0.0; // Size
+    G_size N = 0; // Size
   protected:
     unordered_set<NODE_ID> itrd;
     G_size ttl = 0; // average degree
