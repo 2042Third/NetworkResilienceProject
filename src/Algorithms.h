@@ -99,7 +99,7 @@ namespace NetworkResilience{
       std::cout<< "Largest Connected Component size: "<< sizes[largest]<<std::endl;
       std::cout<< "Existing size: "<< num_e<<std::endl;
       std::cout<< "Removed : "<< num_removal()<<std::endl;
-      std::cout<< "pn/p, fraction of nodes in largest: "<< sizes[largest]/N<<std::endl;
+      std::cout<< "pn, fraction of nodes in largest: "<< (double)(sizes[largest]/N)<<std::endl;
       return tmp.size();
     }
 
@@ -241,16 +241,17 @@ namespace NetworkResilience{
     }
 
 
-    int remove_all_disconnected(){
-      G_size largest = find_largest();
+    int remove_all_disconnected(int second=0){
+      G_size largest = find_largest(second);
 
-      for (auto i=0;i<parents.size();i++){
-        if (i<N && parents[i] != largest) { // first layer removal
-          if (!removal[i]) {
-            Node &a = g.find(i)->second;
-            unlink_all(a.id);
-            removal[i] = 1;
-            sizes[parents[i]]--;
+      G_size a=second?N:0,  max_size=second?2*N:N;
+      for (;a<parents.size();a++){
+        if (a<max_size && parents[a] != largest) { // first layer removal
+          if (!removal[a]) {
+            Node &nd = g.find(a)->second;
+            unlink_all(nd.id);
+            removal[a] = 1;
+            sizes[parents[a]]--;
           }
         }
       }
@@ -303,6 +304,31 @@ namespace NetworkResilience{
       }
       return 1;
     }
+
+    void auto_run(double p){
+
+      std::ofstream output;
+      output.open(fs::current_path().string()+"/dout/out"+to_string(p)+"N"+to_string(N)+".csv",	 ios::out);
+      output<< "gcc_size, pn \n";
+      G_size largest=0;
+      connected_components_count();
+      int idx =0;
+      largest = find_largest(0);
+      while (sizes[largest]>10 ){ // run until largest is less than 10 nodes
+        remove_fraction(p);
+        rerun();
+        connected_components_count();
+        remove_all_disconnected(0);
+        remove_all_disconnected(1);
+
+        largest = find_largest(0);
+        output<< sizes[largest]<<", "<<((double)sizes[largest]/(double)N)<<"\n";
+        idx++;
+        std::cout<<"Iteration: "<<idx<<std::endl;
+      }
+      output.close();
+    }
+
   };
 } // NetworkResilience
 
