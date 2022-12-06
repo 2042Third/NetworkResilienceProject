@@ -18,7 +18,7 @@ void main_loop(net* g, const std::string& of){
     else if (input == "c"){
       std::cout<< "Continue."<<std::endl;
 
-      while (!g->random_rm()){}
+      g->random_rm();
       g->rerun();
       uint32_t cc = g->connected_components_count();
       g->remove_all_disconnected();
@@ -30,6 +30,7 @@ void main_loop(net* g, const std::string& of){
       double _frac = stod(rm_frac);
       g->remove_fraction(_frac);
       g->rerun();
+      uint32_t cc = g->connected_components_count();
       g->remove_all_disconnected();
 
     }

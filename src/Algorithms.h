@@ -16,8 +16,9 @@ namespace NetworkResilience{
   public:
     std::vector<G_size> sizes;
     std::vector<G_size> parents;
+    std::vector<int> removal;
     std::vector<G_size> unlinker;
-    G_size largest, largest_size;
+//    G_size largest;
 #ifdef DEBUG_NET
 
     std::ofstream dfile;
@@ -28,6 +29,7 @@ namespace NetworkResilience{
     void make_set() {
       for (auto i=0; i<= N;i++){
         parents[i] = i;
+        removal[i] = 0;
         sizes[i] = 1;
       }
     }
@@ -37,6 +39,7 @@ namespace NetworkResilience{
     void make_set_second() {
       for (auto i=0; i<= N*2+1;i++){
         parents[i] = i;
+        removal[i] = 0;
         sizes[i] = 1;
       }
     }
@@ -45,7 +48,7 @@ namespace NetworkResilience{
      *  Find the parent of the input node.
      * */
     G_size find_set(G_size n){
-      while (g.find(n) != g.end() && parents[n] != n){
+      while (!removal[n] && parents[n] != n){
         parents[n] = parents[parents[n]];
         n = parents[n];
       }
@@ -56,7 +59,7 @@ namespace NetworkResilience{
      *  Not referencing the second layer of the graph.
      * */
     G_size find_set_second(G_size n){
-      while (g.find(n) != g.end() && parents[n] != n && parents[n]<=N){
+      while (!removal[n] && parents[n] != n && parents[n]<=N){
         parents[n] = parents[parents[n]];
         n = parents[n];
       }
@@ -75,10 +78,6 @@ namespace NetworkResilience{
         }
         parents[n2] = n1;
         sizes[n1] += sizes[n2];
-        if(sizes[n1]>largest_size){
-          largest = n1;
-          largest_size = sizes[n1];
-        }
       }
     }
 
@@ -87,19 +86,31 @@ namespace NetworkResilience{
      * */
     G_size connected_components_count(){
       std::unordered_set<G_size> tmp;
-      for ( auto&o:g) {
-        if(second_layer && o.second.id>=N)
+      G_size num_e = 0;
+      for ( auto o=0 ;o<N;o++) {
+        if(removal[o])
           continue;
-        auto i= o.second.id ;
-        tmp.insert(find_set(i));
+        tmp.insert(find_set(o));
+        num_e ++;
       }
+      G_size largest = find_largest();
       std::cout<< "Largest Connected Component     : "<< largest<<std::endl;
       std::cout<< "Largest Connected Components    : "<< tmp.size()<<std::endl;
-      std::cout<< "Largest Connected Component size: "<< largest_size<<std::endl;
-      std::cout<< "pn/p, fraction of nodes in largest: "<< largest_size/N<<std::endl;
+      std::cout<< "Largest Connected Component size: "<< sizes[largest]<<std::endl;
+      std::cout<< "Existing size: "<< num_e<<std::endl;
+      std::cout<< "Removed : "<< num_removal()<<std::endl;
+      std::cout<< "pn/p, fraction of nodes in largest: "<< sizes[largest]/N<<std::endl;
       return tmp.size();
     }
 
+
+    G_size num_removal () {
+      G_size a = 0;
+      for (auto i:removal){
+        if(i)a++;
+      }
+      return a;
+    }
     /**
    * Randomly connects nodes
    * */
@@ -169,17 +180,15 @@ namespace NetworkResilience{
       // Resize for the second layer
       sizes.resize(N*2+2);
       parents.resize(N*2+2);
+      removal.resize(N*2+2);
       make_set_second();
-      largest = -1;
-      largest_size=1;
     }
 
     Algorithms(G_size nIn, double pIn) : RandomGraph(nIn, pIn) {
       sizes.resize(N+1);
       parents.resize(N+1);
+      removal.resize(N+1);
       make_set();
-      largest = -1;
-      largest_size=1;
 #ifdef DEBUG_NET
       dfile.open(fs::current_path().string()+"/debug_file.txt",	 ios::out);
       if (dfile.is_open())
@@ -194,22 +203,19 @@ namespace NetworkResilience{
     void reset (){
       G_size x = 0;
       for (auto& i:sizes){
-        if(x<=N)sizes[x] = 1;
-        else sizes[x] = 0;
+        sizes[x] = 1;
         parents[x] = x;
         x++;
       }
-      largest = -1;
-      largest_size=1;
     }
 
     void remove_fraction(double& f){
-
 #ifdef DEBUG_NET
       dfile<<"FRACTIONAL REMOVAL:  "<<N*f<<"\n";
 #endif
       G_size n = N*f, count = 0;
       while(count<n){
+
         random_rm();
         count++;
       }
@@ -221,12 +227,14 @@ namespace NetworkResilience{
       static G_size a,b;
       for (auto & i:g){
         a = i.second.id;
-        if(a >= N){continue;}
-        for (auto & f: i.second.links){
-          if(g.find(f) != g.end()) {
-            b = f;
-            if (b >= N) { continue; }
-            union_sets(a,b,second_layer);
+        if(removal[a]){continue;} // not in first layer or removed, then continue
+        for (auto & f: i.second.links){ // all links of the node
+          b = f;
+          if(a<N&b<N&!removal[b]){ // both are from the first layer
+            union_sets(a,b,second_layer); // connect the two (both first layer)
+          }
+          else if (a>=N&b>=N&!removal[b]){ // both are from the second layer
+            union_sets(a,b,second_layer); // connect the two (both first layer)
           }
         }
       }
@@ -234,113 +242,65 @@ namespace NetworkResilience{
 
 
     int remove_all_disconnected(){
-      if (largest<0)
-        connected_components_count();
+      G_size largest = find_largest();
+
       for (auto i=0;i<parents.size();i++){
         if (i<N && parents[i] != largest) { // first layer removal
-          if (g.find(i) != g.end()) {
+          if (!removal[i]) {
             Node &a = g.find(i)->second;
-            std::cout<<"<<<Disconnected removed>>> "<<a.id<<std::endl;
             unlink_all(a.id);
-            g.erase(i);
+            removal[i] = 1;
+            sizes[parents[i]]--;
           }
         }
-
       }
       return 1;
     }
 
     void unlink_all(G_size input){
       Node& n = g.find(input)->second;
-      if(n.links.begin() == n.links.end())return;
+      if(removal[n.id])return;
       if(unlinker.capacity()<=n.links.size())
         unlinker.resize(n.links.size()+1);
       unlinker.clear();
       for (auto i:n.links){
         auto a = g.find(i);
-        if(a!=g.end())
-          unlinker.push_back( a->second.id );
-#ifdef DEBUG_NET
-        dfile<<" "<<unlinker[unlinker.size()-1];
-#endif
+        unlinker.push_back( a->second.id );
       }
-#ifdef DEBUG_NET
-      dfile<<"\n";
-      dfile.flush();
-#endif
       for (auto i:unlinker) {
-#ifdef DEBUG_NET
-      dfile<<"\t unlinking "<<n.id
-      <<" from "<<i<<"\n";
-      dfile.flush();
-#endif
         g.find(i)->second.unlink(n.id);
-//        std::cout<<"Removed(unlink_all) removed "<<n.id<<" from "<<i->id<<std::endl;
       }
+    }
+
+    G_size find_largest(int second=0){
+      G_size a=second?N:0, i=second?N:0, max_size=second?2*N:N;
+      while (i<max_size){
+        if(sizes[i]>sizes[a])
+          a=i;
+        i++;
+      }
+      return a;
     }
 
     int random_rm(){
       G_size n = gen->nextInt() % N;
-      auto itr = g.begin();
-      Node& a = itr->second;
+      Node& a = g.begin()->second;
       Node &b = a;
-      if (g.find(n)==g.end()){
-
-#ifdef DEBUG_NET
-      dfile<<"Original selection: "<<n<<"\n";
-      dfile.flush();
-#endif
+      if (removal[n]) { // if removed, find another one
         G_size c = 0;
-        while (c!=n%g.size()) {
-          itr++;
-          if(itr==g.end()) {
-#ifdef DEBUG_NET
-      dfile<<"FAIL: NO MORE NODES"<<"\n";
-      dfile.flush();
-#endif
-            return 0;
-          }
-          if(itr->second.id<N){ c++; }
-        }
-        a = itr->second;
-
-#ifdef DEBUG_NET
-        dfile<<"next selection: "<<a.id<<", "<<a.id+N<<"\n";
-      dfile.flush();
-#endif
-      } else {
-
-        a= g.find(n)->second;
-#ifdef DEBUG_NET
-        dfile<<"Exists: "<<a.id<<"\n\n";
-      dfile.flush();
-#endif
+        while (c < N) {c++;if (!removal[(c+n)%N]) {break;}}
+        n=(c+n)%N;
       }
-#ifdef DEBUG_NET
-      dfile<<"\tRemoving (first layer) "<<a.id<<", link count"<<a.link_count<<"\n";
-      dfile.flush();
-#endif
-//      std::cout<<"Removing (first layer) "<<n<<std::endl;
-
-      if (second_layer) {
-#ifdef DEBUG_NET
-        dfile<<"\tFinding: "<< a.id+N<<"\n";
-      dfile.flush();
-#endif
-        b = g.find(a.id + N)->second;
-#ifdef DEBUG_NET
-        dfile<<"\tRemoving (second layer) "<<b.id<<", link count"<<b.link_count<<"\n";
-      dfile.flush();
-#endif
-//        std::cout<<"Removing (second layer) "<<n + N<<std::endl;
-
+      a= g.find(n)->second; // get the first layer selected node
+      unlink_all(a.id); // remove all links to the first selected node
+      removal[a.id] = 1; // mark the first node removed
+      sizes[parents[a.id]]--; // decrease the size of it's connected comp
+      if (second_layer ) { // if has a second layer
+        b = g.find(a.id + N)->second; // get the second layer selected node
+        unlink_all(b.id); // remove all links to this node
+        removal[b.id] = 1; // mark the node removed
+        sizes[parents[b.id]]--; // decrease the size of it's connected comp.
       }
-      if(a.link_count>0) {unlink_all(a.id);}
-      if(second_layer) {
-        if(b.link_count>0) {unlink_all(b.id);}
-        g.erase(b.id);
-      }
-      g.erase(itr);
       return 1;
     }
   };
