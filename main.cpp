@@ -97,7 +97,7 @@ void experiment1 () {
 
   uint32_t N = 128000;
   double p = 0.00006;
-  net *g = new net(128000, 0.0000625); // p = 0.0000625, avg degree = 4
+  net *g = new net(128000, 0.0000425); // p = 0.0000625, avg degree = 4
   std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
   g->add_second_layer();
   g->run();
@@ -125,9 +125,24 @@ void experiment0 () {
 void experiment2 () {
   double xp = 0.01; // experiment parameter
 
-  uint32_t N = 5000;
-  double p = 0.06;
-  net *g = new net(5000, 0.000225); // p = 0.0000625, avg degree = 4
+  uint32_t N = 1000000;
+  double p = 0.000008;
+  net *g = new net(1000000, 0.000008); // p = 0.000008, avg degree = 4
+  std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
+  g->add_second_layer();
+  g->run();
+  g->run_second_layer();
+  uint32_t cc = g->connected_components_count();
+  std::cout<<"Connected Components: "<<cc<<std::endl;
+  g->auto_run(xp);
+  delete g;
+}
+void experiment3 () {
+  double xp = 0.01; // experiment parameter
+
+  uint32_t N = 1000;
+  double p = 0.008;
+  net *g = new net(1000, 0.008); // p = 0.000008, avg degree = 4
   std::string of = "./dataOut/out_"+ to_string(N)+"_"+ to_string(p)+".csv";
   g->add_second_layer();
   g->run();
@@ -142,7 +157,9 @@ int main() {
 //  first_test_n();
 //  first_test();
 //  test_large();
-  experiment1();
 //  experiment0();
+//  experiment1();
+  experiment2();
+//  experiment3();
   return 0;
 }

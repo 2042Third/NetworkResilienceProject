@@ -305,11 +305,36 @@ namespace NetworkResilience{
       return 1;
     }
 
+    double average_degree () {
+      double k = 1;
+      G_size degrees=0,num=0;
+      for ( auto i  =0;i<N;i++) {
+        if(!removal[i]){
+          degrees+=g.find(i)->second.link_size();
+          num++;
+        }
+      }
+      k = (double)degrees/(double)num;
+      return k;
+    }
+    double degree_prob () {
+      double k = 1;
+      G_size degrees=0,num=0;
+      for ( auto i  =0;i<N;i++) {
+        if(!removal[i]){
+          degrees+=g.find(i)->second.link_size();
+          num++;
+        }
+      }
+      k = (double)degrees/(double)(N*(N-1)/2);
+      return k;
+    }
+
     void auto_run(double p){
 
       std::ofstream output;
       output.open(fs::current_path().string()+"/dout/out"+to_string(p)+"N"+to_string(N)+".csv",	 ios::out);
-      output<< "gcc_size, pn \n";
+      output<< "gcc_size, pn/p, pc,p, avg_degree \n";
       G_size largest=0;
       connected_components_count();
       int idx =0;
@@ -322,7 +347,8 @@ namespace NetworkResilience{
         remove_all_disconnected(1);
 
         largest = find_largest(0);
-        output<< sizes[largest]<<", "<<((double)sizes[largest]/(double)N)<<"\n";
+        output<< sizes[largest]<<", "<<((double)sizes[largest]/(double)N)/(2.4554/average_degree ())
+            <<", "<<(degree_prob())<<", "<<(average_degree ())<<", "<<(average_degree ())<<"\n";
         idx++;
         std::cout<<"Iteration: "<<idx<<std::endl;
       }
